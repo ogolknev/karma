@@ -79,8 +79,8 @@ export class DrizzleUserService implements UserService {
       if (params.ids) filters.push(inArray(userTable.id, params.ids));
 
       const pagination: Required<PaginationParams> = {
-        offset: params.pagination?.offset ?? 0,
-        limit: params.pagination?.offset ?? 20,
+        offset: params.pagination?.offset || 0,
+        limit: params.pagination?.limit || 20,
       };
 
       const users = await db
