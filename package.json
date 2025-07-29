@@ -2,19 +2,22 @@
   "name": "karma",
   "version": "1.0.50",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate:test": "DOTENV_CONFIG_PATH=.env.test drizzle-kit push",
+    "test": "bun run migrate:test && bun test",
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
     "argon2": "^0.43.1",
     "dotenv": "^17.2.1",
-    "drizzle-orm": "^0.44.3",
+    "drizzle": "^1.4.0",
+    "drizzle-orm": "^0.44.4",
     "elysia": "latest",
     "pg": "^8.16.3"
   },
   "devDependencies": {
     "@sinclair/typebox": "^0.34.38",
     "@types/pg": "^8.15.5",
+    "bun": "^1.2.19",
     "bun-types": "latest",
     "drizzle-kit": "^0.31.4",
     "tsx": "^4.20.3"
