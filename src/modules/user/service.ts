@@ -1,7 +1,11 @@
-import { and, eq, inArray, SQL } from "drizzle-orm";
+import { and, count, eq, inArray, SQL } from "drizzle-orm";
 import { db } from "../../shared/db";
 import { userTable } from "../../shared/db/schema";
-import { ServiceResponse } from "../../shared/model";
+import {
+  PaginationMeta,
+  PaginationParams,
+  ServiceResponse,
+} from "../../shared/model";
 import { hashPassword } from "../../shared/utils/encryption";
 import { UserCreate, UserDTO, UserUpdate } from "./model";
 
@@ -10,10 +14,10 @@ export interface UserService {
   get(params: { id: string }): Promise<ServiceResponse<UserDTO | null>>;
   get(params: {
     ids?: string[];
-    pagination?: any;
+    pagination?: PaginationParams;
     sorting?: any;
     search?: any;
-  }): Promise<ServiceResponse<UserDTO[]>>;
+  }): Promise<ServiceResponse<UserDTO[], { pagination: PaginationMeta }>>;
   update(params: {
     id: string;
     data: UserUpdate;
@@ -41,20 +45,23 @@ export class DrizzleUserService implements UserService {
   get(params: { id: string }): Promise<ServiceResponse<UserDTO | null>>;
   get(params: {
     ids?: string[];
-    pagination?: any;
+    pagination?: PaginationParams;
     sorting?: any;
     search?: any;
-  }): Promise<ServiceResponse<UserDTO[]>>;
+  }): Promise<ServiceResponse<UserDTO[], { pagination: PaginationMeta }>>;
   async get(
     params:
       | { id: string }
       | {
           ids?: string[];
-          pagination?: any;
+          pagination?: PaginationParams;
           sorting?: any;
           search?: any;
         }
-  ): Promise<ServiceResponse<UserDTO | null> | ServiceResponse<UserDTO[]>> {
+  ): Promise<
+    | ServiceResponse<UserDTO | null>
+    | ServiceResponse<UserDTO[], { pagination: PaginationMeta }>
+  > {
     if ("id" in params) {
       const user = (
         await db.select().from(userTable).where(eq(userTable.id, params.id))
@@ -64,16 +71,36 @@ export class DrizzleUserService implements UserService {
         data: user ?? null,
       };
     } else {
+      if ((params.ids && params.pagination) || (params.ids && params.search)) {
+        throw new Error("Bad request");
+      }
+
       let filters: SQL[] = [];
       if (params.ids) filters.push(inArray(userTable.id, params.ids));
+
+      const pagination: Required<PaginationParams> = {
+        offset: params.pagination?.offset ?? 0,
+        limit: params.pagination?.offset ?? 20,
+      };
 
       const users = await db
         .select()
         .from(userTable)
-        .where(and(...filters));
+        .where(and(...filters))
+        .offset(pagination.offset)
+        .limit(pagination.limit);
+
+      const total = (await db.select({ count: count() }).from(userTable))[0]
+        .count;
 
       return {
         data: users,
+        meta: {
+          pagination: {
+            ...pagination,
+            total,
+          },
+        },
       };
     }
   }
