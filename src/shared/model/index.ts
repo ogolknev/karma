@@ -5,3 +5,4 @@ export {
   PaginationMeta,
   PaginationParams,
 } from "./pagination";
+export { sortingParamsSchema, SortingParams } from "./sorting";

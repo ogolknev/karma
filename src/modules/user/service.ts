@@ -1,11 +1,7 @@
-import { and, count, eq, inArray, SQL } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, SQL } from "drizzle-orm";
 import { db } from "../../shared/db";
 import { userTable } from "../../shared/db/schema";
-import {
-  PaginationMeta,
-  PaginationParams,
-  ServiceResponse,
-} from "../../shared/model";
+import { PaginationMeta, PaginationParams, ServiceResponse, SortingParams } from "../../shared/model";
 import { hashPassword } from "../../shared/utils/encryption";
 import { UserCreate, UserDTO, UserUpdate } from "./model";
 
@@ -15,20 +11,15 @@ export interface UserService {
   get(params: {
     ids?: string[];
     pagination?: PaginationParams;
-    sorting?: any;
+    sorting?: SortingParams;
     search?: any;
   }): Promise<ServiceResponse<UserDTO[], { pagination: PaginationMeta }>>;
-  update(params: {
-    id: string;
-    data: UserUpdate;
-  }): Promise<ServiceResponse<UserDTO | null>>;
+  update(params: { id: string; data: UserUpdate }): Promise<ServiceResponse<UserDTO | null>>;
   delete(params: { id: string }): Promise<ServiceResponse<UserDTO | null>>;
 }
 
 export class DrizzleUserService implements UserService {
-  async create(params: {
-    data: UserCreate;
-  }): Promise<ServiceResponse<UserDTO>> {
+  async create(params: { data: UserCreate }): Promise<ServiceResponse<UserDTO>> {
     const createdUser = (
       await db
         .insert(userTable)
@@ -46,7 +37,7 @@ export class DrizzleUserService implements UserService {
   get(params: {
     ids?: string[];
     pagination?: PaginationParams;
-    sorting?: any;
+    sorting?: SortingParams;
     search?: any;
   }): Promise<ServiceResponse<UserDTO[], { pagination: PaginationMeta }>>;
   async get(
@@ -55,17 +46,12 @@ export class DrizzleUserService implements UserService {
       | {
           ids?: string[];
           pagination?: PaginationParams;
-          sorting?: any;
+          sorting?: SortingParams;
           search?: any;
         }
-  ): Promise<
-    | ServiceResponse<UserDTO | null>
-    | ServiceResponse<UserDTO[], { pagination: PaginationMeta }>
-  > {
+  ): Promise<ServiceResponse<UserDTO | null> | ServiceResponse<UserDTO[], { pagination: PaginationMeta }>> {
     if ("id" in params) {
-      const user = (
-        await db.select().from(userTable).where(eq(userTable.id, params.id))
-      )[0];
+      const user = (await db.select().from(userTable).where(eq(userTable.id, params.id)))[0];
 
       return {
         data: user ?? null,
@@ -75,8 +61,16 @@ export class DrizzleUserService implements UserService {
         throw new Error("Bad request");
       }
 
-      let filters: SQL[] = [];
+      const filters: SQL[] = [];
+      const sorting: SQL[] = [];
       if (params.ids) filters.push(inArray(userTable.id, params.ids));
+      params.sorting?.forEach((sortingParams) => {
+        if (sortingParams.order === "desc") {
+          sorting.push(desc(userTable[sortingParams.by as keyof UserDTO]));
+        } else {
+          sorting.push(asc(userTable[sortingParams.by as keyof UserDTO]));
+        }
+      });
 
       const pagination: Required<PaginationParams> = {
         offset: params.pagination?.offset || 0,
@@ -87,11 +81,11 @@ export class DrizzleUserService implements UserService {
         .select()
         .from(userTable)
         .where(and(...filters))
+        .orderBy(...sorting)
         .offset(pagination.offset)
         .limit(pagination.limit);
 
-      const total = (await db.select({ count: count() }).from(userTable))[0]
-        .count;
+      const total = (await db.select({ count: count() }).from(userTable))[0].count;
 
       return {
         data: users,
@@ -105,28 +99,15 @@ export class DrizzleUserService implements UserService {
     }
   }
 
-  async update(params: {
-    id: string;
-    data: UserUpdate;
-  }): Promise<ServiceResponse<UserDTO | null>> {
-    const updatedUser = (
-      await db
-        .update(userTable)
-        .set(params.data)
-        .where(eq(userTable.id, params.id))
-        .returning()
-    )[0];
+  async update(params: { id: string; data: UserUpdate }): Promise<ServiceResponse<UserDTO | null>> {
+    const updatedUser = (await db.update(userTable).set(params.data).where(eq(userTable.id, params.id)).returning())[0];
 
     return {
       data: updatedUser ?? null,
     };
   }
-  async delete(params: {
-    id: string;
-  }): Promise<ServiceResponse<UserDTO | null>> {
-    const deletedUser = (
-      await db.delete(userTable).where(eq(userTable.id, params.id)).returning()
-    )[0];
+  async delete(params: { id: string }): Promise<ServiceResponse<UserDTO | null>> {
+    const deletedUser = (await db.delete(userTable).where(eq(userTable.id, params.id)).returning())[0];
 
     return {
       data: deletedUser ?? null,
