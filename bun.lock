@@ -7,6 +7,7 @@
         "elysia": "latest",
       },
       "devDependencies": {
+        "@sinclair/typebox": "^0.34.38",
         "bun-types": "latest",
       },
     },

@@ -1,9 +1,10 @@
-import { UserCreate, UserUpdate } from "./model";
+import { ServiceResponse } from "../../shared/model";
+import { UserCreate, UserDTO, UserUpdate } from "./model";
 
 export interface UserService {
-  create(params: { data: UserCreate }): any;
-  get(params: { id: string }): any;
-  get(params: { ids?: string[], pagination?: any, sorting?: any, search?: any }): any;
-  update(params: { id: string, data: UserUpdate }): any
-  delete(params: { id: string }): any
+  create(params: { data: UserCreate }): ServiceResponse<UserDTO>;
+  get(params: { id: string }): ServiceResponse<UserDTO | null>;
+  get(params: { ids?: string[], pagination?: any, sorting?: any, search?: any }): ServiceResponse<UserDTO[]>;
+  update(params: { id: string, data: UserUpdate }): ServiceResponse<UserDTO | null>
+  delete(params: { id: string }): ServiceResponse<UserDTO | null>
 }
