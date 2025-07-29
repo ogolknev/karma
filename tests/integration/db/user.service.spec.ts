@@ -12,14 +12,16 @@ import "../../setup";
 const db = drizzle(process.env.DATABASE_URL!);
 const userService: UserService = new DrizzleUserService();
 
-const userData = {
-  username: "test_user",
-  password: "test_password",
-};
+const generateTestUserDataPool = (count: number) => {
+  const userDataPool: {
+    username: string;
+    password: string;
+  }[] = Array.from({ length: count });
 
-const userData_2 = {
-  username: "test_user_2",
-  password: "test_password",
+  return userDataPool.map((userData, index) => ({
+    username: `test_username_${index}`,
+    password: `test_password_${index}`,
+  }));
 };
 
 beforeEach(async () => {
@@ -32,6 +34,8 @@ afterAll(async () => {
 
 describe("UserService: ", () => {
   test("create user", async () => {
+    const [userData] = generateTestUserDataPool(1);
+
     const user = (await userService.create({ data: userData })).data;
 
     expect(user).toHaveProperty("id");
@@ -42,6 +46,8 @@ describe("UserService: ", () => {
   });
 
   test("create two users with same username", async () => {
+    const [userData] = generateTestUserDataPool(1);
+
     try {
       (await userService.create({ data: userData })).data;
       (await userService.create({ data: userData })).data;
@@ -57,6 +63,8 @@ describe("UserService: ", () => {
   });
 
   test("get one user by ID", async () => {
+    const [userData] = generateTestUserDataPool(1);
+
     const id = (await userService.create({ data: userData })).data.id;
     const user = (await userService.get({ id })).data;
 
@@ -69,9 +77,11 @@ describe("UserService: ", () => {
   });
 
   test("get multiple users by IDs", async () => {
+    const userData = generateTestUserDataPool(2);
+
     const ids: string[] = [];
-    ids.push((await userService.create({ data: userData })).data.id);
-    ids.push((await userService.create({ data: userData_2 })).data.id);
+    ids.push((await userService.create({ data: userData[0] })).data.id);
+    ids.push((await userService.create({ data: userData[1] })).data.id);
     const users = (await userService.get({ ids })).data;
 
     for (const [index, user] of users.entries()) {
@@ -83,7 +93,30 @@ describe("UserService: ", () => {
     }
   });
 
+  test("get multiple users with pagination", async () => {
+    const TOTAL = 20
+    const userDataPool = generateTestUserDataPool(TOTAL);
+    await Promise.all(
+      userDataPool.map((userData) => userService.create({ data: userData }))
+    );
+
+    const LIMIT = 5
+    const responseWithLimit = await userService.get({ pagination: { limit: LIMIT } });
+
+    expect(responseWithLimit.data).toHaveLength(LIMIT);
+    expect(responseWithLimit.meta.pagination).toHaveProperty("limit", LIMIT)
+    expect(responseWithLimit.meta.pagination).toHaveProperty("total", TOTAL)
+
+    const OFFSET = 10
+    const responseWithOffset = await userService.get({ pagination: { offset: OFFSET, limit: TOTAL } });
+
+    expect(responseWithOffset.data).toHaveLength(TOTAL - OFFSET);
+    expect(responseWithOffset.meta.pagination).toHaveProperty("offset", OFFSET)
+    expect(responseWithOffset.meta.pagination).toHaveProperty("total", TOTAL)
+  });
+
   test("update user", async () => {
+    const [userData] = generateTestUserDataPool(1);
     const updateData = {
       username: "test_changed",
       karmaPoints: 999,
@@ -102,11 +135,13 @@ describe("UserService: ", () => {
   });
 
   test("delete user", async () => {
+    const [userData] = generateTestUserDataPool(1);
+
     const id = (await userService.create({ data: userData })).data.id;
     await userService.delete({ id });
 
-    const user = (await userService.get({id})).data
+    const user = (await userService.get({ id })).data;
 
-    expect(user).toBeNull()
+    expect(user).toBeNull();
   });
 });
