@@ -2,10 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { beforeEach, describe, test, afterAll, expect } from "bun:test";
 import { userTable } from "../../../src/shared/db/schema";
 import { DrizzleQueryError, sql } from "drizzle-orm";
-import {
-  DrizzleUserService,
-  UserService,
-} from "../../../src/modules/user/service";
+import { DrizzleUserService, UserService } from "../../../src/modules/user/service";
 
 import "../../setup";
 
@@ -52,11 +49,7 @@ describe("UserService: ", () => {
       (await userService.create({ data: userData })).data;
       (await userService.create({ data: userData })).data;
     } catch (error) {
-      if (
-        error instanceof DrizzleQueryError &&
-        error.cause &&
-        "code" in error.cause
-      ) {
+      if (error instanceof DrizzleQueryError && error.cause && "code" in error.cause) {
         expect(error.cause.code).toBe("23505");
       }
     }
@@ -94,25 +87,34 @@ describe("UserService: ", () => {
   });
 
   test("get multiple users with pagination", async () => {
-    const TOTAL = 20
+    const TOTAL = 20;
     const userDataPool = generateTestUserDataPool(TOTAL);
-    await Promise.all(
-      userDataPool.map((userData) => userService.create({ data: userData }))
-    );
+    await Promise.all(userDataPool.map((userData) => userService.create({ data: userData })));
 
-    const LIMIT = 5
+    const LIMIT = 5;
     const responseWithLimit = await userService.get({ pagination: { limit: LIMIT } });
 
     expect(responseWithLimit.data).toHaveLength(LIMIT);
-    expect(responseWithLimit.meta.pagination).toHaveProperty("limit", LIMIT)
-    expect(responseWithLimit.meta.pagination).toHaveProperty("total", TOTAL)
+    expect(responseWithLimit.meta.pagination).toHaveProperty("limit", LIMIT);
+    expect(responseWithLimit.meta.pagination).toHaveProperty("total", TOTAL);
 
-    const OFFSET = 10
+    const OFFSET = 10;
     const responseWithOffset = await userService.get({ pagination: { offset: OFFSET, limit: TOTAL } });
 
     expect(responseWithOffset.data).toHaveLength(TOTAL - OFFSET);
-    expect(responseWithOffset.meta.pagination).toHaveProperty("offset", OFFSET)
-    expect(responseWithOffset.meta.pagination).toHaveProperty("total", TOTAL)
+    expect(responseWithOffset.meta.pagination).toHaveProperty("offset", OFFSET);
+    expect(responseWithOffset.meta.pagination).toHaveProperty("total", TOTAL);
+  });
+
+  test("get multiple users with sorting", async () => {
+    const userData = generateTestUserDataPool(3);
+    await Promise.all(userData.map((data) => userService.create({ data })));
+
+    const ascResponse = await userService.get({ sorting: [{ by: "username", order: "asc" }] });
+    const descResponse = await userService.get({ sorting: [{ by: "username", order: "desc" }] });
+
+    expect(ascResponse.data[0]).toEqual(descResponse.data[2])
+    expect(ascResponse.data[2]).toEqual(descResponse.data[0])
   });
 
   test("update user", async () => {
