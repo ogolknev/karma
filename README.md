@@ -1,15 +1,5 @@
-# Elysia with Bun runtime
+# Karma
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
-```bash
-bun create elysia ./elysia-example
-```
+An application that helps you make your karma work for you. You can earn karma points by completing tasks that benefit yourself, as well as by helping others and earning their respect (and shared karma points).
 
-## Development
-To start the development server run:
-```bash
-bun run dev
-```
-
-Open http://localhost:3000/ with your browser to see the result.
+🚧 **Early stage of development** 🚧
