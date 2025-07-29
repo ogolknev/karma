@@ -1,3 +1,4 @@
 {
-  "bun.test.customScript": "npx bun run test"
+  "bun.test.customScript": "npx bun run test",
+  "prettier.printWidth": 120
 }
