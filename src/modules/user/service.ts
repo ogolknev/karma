@@ -1,25 +1,21 @@
 import { and, asc, count, desc, eq, inArray, SQL } from "drizzle-orm";
 import { db } from "../../shared/db";
 import { userTable } from "../../shared/db/schema";
-import { PaginationMeta, PaginationParams, ServiceResponse, SortingParams } from "../../shared/model";
+import { PaginationParams } from "../../shared/model";
 import { hashPassword } from "../../shared/utils/encryption";
-import { UserCreate, UserDTO, UserUpdate } from "./model";
+import { UserCreateResponse, UserDeleteParams, UserDeleteResponse, UserGetManyResponse, UserGetOneResponse, UserGetResponse, UserUpdateParams, UserUpdateResponse } from "./model";
+import { UserCreateParams, UserDTO, UserGetManyParams, UserGetOneParams, UserGetParams } from "./model";
 
 export interface UserService {
-  create(params: { data: UserCreate }): Promise<ServiceResponse<UserDTO>>;
-  get(params: { id: string }): Promise<ServiceResponse<UserDTO | null>>;
-  get(params: {
-    ids?: string[];
-    pagination?: PaginationParams;
-    sorting?: SortingParams;
-    search?: any;
-  }): Promise<ServiceResponse<UserDTO[], { pagination: PaginationMeta }>>;
-  update(params: { id: string; data: UserUpdate }): Promise<ServiceResponse<UserDTO | null>>;
-  delete(params: { id: string }): Promise<ServiceResponse<UserDTO | null>>;
+  create(params: UserCreateParams): Promise<UserCreateResponse>;
+  get(params: UserGetOneParams): Promise<UserGetOneResponse>;
+  get(params: UserGetManyParams): Promise<UserGetManyResponse>;
+  update(params: UserUpdateParams): Promise<UserUpdateResponse>;
+  delete(params: UserDeleteParams): Promise<UserDeleteResponse>;
 }
 
 export class DrizzleUserService implements UserService {
-  async create(params: { data: UserCreate }): Promise<ServiceResponse<UserDTO>> {
+  async create(params: UserCreateParams): Promise<UserCreateResponse> {
     const createdUser = (
       await db
         .insert(userTable)
@@ -33,23 +29,9 @@ export class DrizzleUserService implements UserService {
     return { data: createdUser };
   }
 
-  get(params: { id: string }): Promise<ServiceResponse<UserDTO | null>>;
-  get(params: {
-    ids?: string[];
-    pagination?: PaginationParams;
-    sorting?: SortingParams;
-    search?: any;
-  }): Promise<ServiceResponse<UserDTO[], { pagination: PaginationMeta }>>;
-  async get(
-    params:
-      | { id: string }
-      | {
-          ids?: string[];
-          pagination?: PaginationParams;
-          sorting?: SortingParams;
-          search?: any;
-        }
-  ): Promise<ServiceResponse<UserDTO | null> | ServiceResponse<UserDTO[], { pagination: PaginationMeta }>> {
+  get(params: UserGetOneParams): Promise<UserGetOneResponse>;
+  get(params: UserGetManyParams): Promise<UserGetManyResponse>;
+  async get(params: UserGetParams): Promise<UserGetResponse> {
     if ("id" in params) {
       const user = (await db.select().from(userTable).where(eq(userTable.id, params.id)))[0];
 
@@ -57,13 +39,19 @@ export class DrizzleUserService implements UserService {
         data: user ?? null,
       };
     } else {
-      if ((params.ids && params.pagination) || (params.ids && params.search)) {
-        throw new Error("Bad request");
-      }
-
       const filters: SQL[] = [];
       const sorting: SQL[] = [];
-      if (params.ids) filters.push(inArray(userTable.id, params.ids));
+      const pagination: Required<PaginationParams> = {
+        offset: 0,
+        limit: 20,
+      };
+
+      if ("ids" in params) filters.push(inArray(userTable.id, params.ids));
+      else {
+        pagination.offset = params.pagination?.offset ?? pagination.offset;
+        pagination.limit = params.pagination?.limit ?? pagination.limit;
+      }
+
       params.sorting?.forEach((sortingParams) => {
         if (sortingParams.order === "desc") {
           sorting.push(desc(userTable[sortingParams.by as keyof UserDTO]));
@@ -71,11 +59,6 @@ export class DrizzleUserService implements UserService {
           sorting.push(asc(userTable[sortingParams.by as keyof UserDTO]));
         }
       });
-
-      const pagination: Required<PaginationParams> = {
-        offset: params.pagination?.offset || 0,
-        limit: params.pagination?.limit || 20,
-      };
 
       const users = await db
         .select()
@@ -99,14 +82,14 @@ export class DrizzleUserService implements UserService {
     }
   }
 
-  async update(params: { id: string; data: UserUpdate }): Promise<ServiceResponse<UserDTO | null>> {
+  async update(params: UserUpdateParams): Promise<UserUpdateResponse> {
     const updatedUser = (await db.update(userTable).set(params.data).where(eq(userTable.id, params.id)).returning())[0];
 
     return {
       data: updatedUser ?? null,
     };
   }
-  async delete(params: { id: string }): Promise<ServiceResponse<UserDTO | null>> {
+  async delete(params: UserDeleteParams): Promise<UserDeleteResponse> {
     const deletedUser = (await db.delete(userTable).where(eq(userTable.id, params.id)).returning())[0];
 
     return {
