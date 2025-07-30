@@ -30,7 +30,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
       },
     }
   )
-  .get(
+  .post(
     "/",
     async ({ body }) => {
       const response = await userService.get(body);
