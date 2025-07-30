@@ -15,7 +15,7 @@ const generateTestUserDataPool = (count: number) => {
     password: string;
   }[] = Array.from({ length: count });
 
-  return userDataPool.map((userData, index) => ({
+  return userDataPool.map((_, index) => ({
     username: `test_username_${index}`,
     password: `test_password_${index}`,
   }));
