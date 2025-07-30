@@ -50,7 +50,7 @@ export type UserGetParams = typeof userGetParamsSchema.static;
 export const userGetResponseSchema = t.Union([userGetOneResponseSchema, userGetManyResponseSchema]);
 export type UserGetResponse = typeof userGetResponseSchema.static;
 
-export const userUpdateSchema = t.Partial(userCreateSchema);
+export const userUpdateSchema = t.Partial(t.Omit(userDTOSchema, ["id"]));
 export type UserUpdate = typeof userUpdateSchema.static;
 
 export const userUpdateParamsSchema = t.Object({ id: t.String(), data: userUpdateSchema });
