@@ -1,8 +1,11 @@
-export { ServiceResponse } from "./service-response";
+export type { ServiceResponse } from "./service-response";
 export {
   paginationMetaSchema,
-  paginationParamsSchema,
-  PaginationMeta,
-  PaginationParams,
+  paginationParamsSchema
 } from "./pagination";
-export { sortingParamsSchema, SortingParams } from "./sorting";
+export type {
+  PaginationMeta,
+  PaginationParams
+} from "./pagination";
+export { sortingParamsSchema } from "./sorting";export type { SortingParams } from "./sorting";
+

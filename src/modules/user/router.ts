@@ -1,5 +1,5 @@
 import Elysia, { t } from "elysia";
-import { DrizzleUserService, UserService } from "./service";
+import { DrizzleUserService, type UserService } from "./service";
 import {
   userCreateParamsSchema,
   userCreateResponseSchema,

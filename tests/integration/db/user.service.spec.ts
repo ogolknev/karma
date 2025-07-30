@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { beforeEach, describe, test, afterAll, expect } from "bun:test";
 import { userTable } from "../../../src/shared/db/schema";
 import { DrizzleQueryError, sql } from "drizzle-orm";
-import { DrizzleUserService, UserService } from "../../../src/modules/user/service";
+import { DrizzleUserService, type UserService } from "../../../src/modules/user/service";
 
 import "../../setup";
 
