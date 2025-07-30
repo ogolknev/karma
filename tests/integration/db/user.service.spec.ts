@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { beforeEach, describe, test, afterAll, expect } from "bun:test";
+import { beforeEach, describe, test, expect } from "bun:test";
 import { userTable } from "../../../src/shared/db/schema";
-import { DrizzleQueryError, sql } from "drizzle-orm";
+import { DrizzleQueryError } from "drizzle-orm";
 import { DrizzleUserService, type UserService } from "../../../src/modules/user/service";
 
 import "../../setup";
@@ -13,10 +13,6 @@ const userService: UserService = new DrizzleUserService();
 describe("UserService:", () => {
   beforeEach(async () => {
     await db.delete(userTable);
-  });
-
-  afterAll(async () => {
-    await db.execute(sql`DROP SCHEMA public CASCADE; CREATE SCHEMA public;`);
   });
 
   test("create user", async () => {
