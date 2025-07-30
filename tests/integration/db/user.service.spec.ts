@@ -29,7 +29,7 @@ afterAll(async () => {
   await db.execute(sql`DROP SCHEMA public CASCADE; CREATE SCHEMA public;`);
 });
 
-describe("UserService: ", () => {
+describe("UserService:", () => {
   test("create user", async () => {
     const [userData] = generateTestUserDataPool(1);
 
