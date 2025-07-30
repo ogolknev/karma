@@ -32,10 +32,12 @@ const userGetManyBySearchParamsSchema = t.Object({
   search: t.Optional(t.String()),
   pagination: t.Optional(paginationParamsSchema),
 });
-export const userGetManyParamsSchema = t.Intersect([
-  t.Union([userGetManyByIDsParamsSchema, userGetManyBySearchParamsSchema]),
-  t.Object({ sorting: t.Optional(sortingParamsSchema) }),
+
+export const userGetManyParamsSchema = t.Union([
+  t.Intersect([userGetManyByIDsParamsSchema, t.Object({ sorting: t.Optional(sortingParamsSchema) })]),
+  t.Intersect([userGetManyBySearchParamsSchema, t.Object({ sorting: t.Optional(sortingParamsSchema) })]),
 ]);
+
 export type UserGetManyParams = typeof userGetManyParamsSchema.static;
 
 export const userGetManyResponseSchema = serviceResponseSchema(
@@ -60,7 +62,7 @@ export const userUpdateResponseSchema = serviceResponseSchema(t.Nullable(userDTO
 export type UserUpdateResponse = typeof userUpdateResponseSchema.static;
 
 export const userDeleteParamsSchema = t.Object({ id: t.String() });
-export type UserDeleteParams = typeof userDeleteParamsSchema.static
+export type UserDeleteParams = typeof userDeleteParamsSchema.static;
 
 export const userDeleteResponseSchema = serviceResponseSchema(t.Nullable(userDTOSchema));
 export type UserDeleteResponse = typeof userDeleteResponseSchema.static;
