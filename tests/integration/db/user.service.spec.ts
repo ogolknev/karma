@@ -5,33 +5,22 @@ import { DrizzleQueryError, sql } from "drizzle-orm";
 import { DrizzleUserService, type UserService } from "../../../src/modules/user/service";
 
 import "../../setup";
+import { generateTestUserData } from "../../utils";
 
 const db = drizzle(process.env.DATABASE_URL!);
 const userService: UserService = new DrizzleUserService();
 
-const generateTestUserDataPool = (count: number) => {
-  const userDataPool: {
-    username: string;
-    password: string;
-  }[] = Array.from({ length: count });
-
-  return userDataPool.map((_, index) => ({
-    username: `test_username_${index}`,
-    password: `test_password_${index}`,
-  }));
-};
-
-beforeEach(async () => {
-  await db.delete(userTable);
-});
-
-afterAll(async () => {
-  await db.execute(sql`DROP SCHEMA public CASCADE; CREATE SCHEMA public;`);
-});
-
 describe("UserService:", () => {
+  beforeEach(async () => {
+    await db.delete(userTable);
+  });
+
+  afterAll(async () => {
+    await db.execute(sql`DROP SCHEMA public CASCADE; CREATE SCHEMA public;`);
+  });
+
   test("create user", async () => {
-    const [userData] = generateTestUserDataPool(1);
+    const [userData] = generateTestUserData(1);
 
     const user = (await userService.create({ data: userData })).data;
 
@@ -43,7 +32,7 @@ describe("UserService:", () => {
   });
 
   test("create two users with same username", async () => {
-    const [userData] = generateTestUserDataPool(1);
+    const [userData] = generateTestUserData(1);
 
     try {
       (await userService.create({ data: userData })).data;
@@ -56,7 +45,7 @@ describe("UserService:", () => {
   });
 
   test("get one user by ID", async () => {
-    const [userData] = generateTestUserDataPool(1);
+    const [userData] = generateTestUserData(1);
 
     const id = (await userService.create({ data: userData })).data.id;
     const user = (await userService.get({ id })).data;
@@ -70,7 +59,7 @@ describe("UserService:", () => {
   });
 
   test("get multiple users by IDs", async () => {
-    const userData = generateTestUserDataPool(2);
+    const userData = generateTestUserData(2);
 
     const ids: string[] = [];
     ids.push((await userService.create({ data: userData[0] })).data.id);
@@ -88,7 +77,7 @@ describe("UserService:", () => {
 
   test("get multiple users with pagination", async () => {
     const TOTAL = 20;
-    const userDataPool = generateTestUserDataPool(TOTAL);
+    const userDataPool = generateTestUserData(TOTAL);
     await Promise.all(userDataPool.map((userData) => userService.create({ data: userData })));
 
     const LIMIT = 5;
@@ -107,18 +96,18 @@ describe("UserService:", () => {
   });
 
   test("get multiple users with sorting", async () => {
-    const userData = generateTestUserDataPool(3);
+    const userData = generateTestUserData(3);
     await Promise.all(userData.map((data) => userService.create({ data })));
 
     const ascResponse = await userService.get({ sorting: [{ by: "username", order: "asc" }] });
     const descResponse = await userService.get({ sorting: [{ by: "username", order: "desc" }] });
 
-    expect(ascResponse.data[0]).toEqual(descResponse.data[2])
-    expect(ascResponse.data[2]).toEqual(descResponse.data[0])
+    expect(ascResponse.data[0]).toEqual(descResponse.data[2]);
+    expect(ascResponse.data[2]).toEqual(descResponse.data[0]);
   });
 
   test("update user", async () => {
-    const [userData] = generateTestUserDataPool(1);
+    const [userData] = generateTestUserData(1);
     const updateData = {
       username: "test_changed",
       karmaPoints: 999,
@@ -137,7 +126,7 @@ describe("UserService:", () => {
   });
 
   test("delete user", async () => {
-    const [userData] = generateTestUserDataPool(1);
+    const [userData] = generateTestUserData(1);
 
     const id = (await userService.create({ data: userData })).data.id;
     await userService.delete({ id });
