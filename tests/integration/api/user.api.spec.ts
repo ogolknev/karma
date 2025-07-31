@@ -154,8 +154,6 @@ describe("User API:", () => {
       method: "DELETE",
     })
 
-    console.log(response)
-
     let data = await response.json()
 
     expect(response.status).toBe(200)
