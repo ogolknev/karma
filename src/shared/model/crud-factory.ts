@@ -5,11 +5,9 @@ import { paginationMetaSchema, paginationParamsSchema } from "./pagination";
 import type { Static, TOmit, TPick } from "@sinclair/typebox";
 import type { Mutable } from "../utils/types";
 
-
-
 export function createCRUDShemas<
   TBaseSchema extends ReturnType<typeof t.Object<{ id: ReturnType<typeof t.String> }>>,
-  TDTOOmit extends readonly (keyof Static<TBaseSchema>)[] = readonly (keyof Static<TBaseSchema>)[],
+  TDTOOmit extends readonly (keyof Static<TBaseSchema>)[] = readonly [],
   TCreateParams extends readonly (keyof Static<TBaseSchema>)[] = readonly (keyof Static<TBaseSchema>)[]
 >(
   baseSchema: TBaseSchema,
@@ -20,13 +18,16 @@ export function createCRUDShemas<
 ) {
   options = options ?? {};
   options.dtoOmit = options.dtoOmit ?? ([] as unknown as TDTOOmit);
-  const dto: TOmit<TBaseSchema, Mutable<TDTOOmit>> = t.Omit<TBaseSchema, Mutable<TDTOOmit>>(baseSchema, options.dtoOmit);
+  const dto: TOmit<TBaseSchema, Mutable<TDTOOmit>> = t.Omit<TBaseSchema, Mutable<TDTOOmit>>(
+    baseSchema,
+    options.dtoOmit
+  );
 
   options.createParams = options.createParams ?? (Object.keys(baseSchema.properties) as unknown as TCreateParams);
-  const create: TPick<TBaseSchema, Mutable<TCreateParams>> = t.Pick<
-    TBaseSchema,
-    Mutable<TCreateParams>
-  >(baseSchema, options.createParams);
+  const create: TPick<TBaseSchema, Mutable<TCreateParams>> = t.Pick<TBaseSchema, Mutable<TCreateParams>>(
+    baseSchema,
+    options.createParams
+  );
   const update = t.Partial(t.Omit(dto, ["id"]));
 
   const createParams = t.Object({ data: create });
