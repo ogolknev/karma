@@ -1,6 +1,7 @@
 import { t } from "elysia";
-import { paginationMetaSchema, paginationParamsSchema, sortingParamsSchema } from "../../shared/model";
-import { serviceResponseSchema } from "../../shared/model/service-response";
+import { createCRUDShemas } from "../../shared/model/crud-factory";
+// import { paginationMetaSchema, paginationParamsSchema, sortingParamsSchema } from "../../shared/model";
+// import { serviceResponseSchema } from "../../shared/model/service-response";
 
 const userBaseSchema = t.Object({
   id: t.String({ minLength: 1 }),
@@ -10,59 +11,61 @@ const userBaseSchema = t.Object({
   respectPoints: t.Number({ default: 0 }),
 });
 
-export const userDTOSchema = t.Omit(userBaseSchema, ["password"]);
-export type UserDTO = typeof userDTOSchema.static;
+export const userSchemas = createCRUDShemas(userBaseSchema, { dtoOmit: ["password"], createParams: ["username", "password"] });
 
-export const userCreateSchema = t.Pick(userBaseSchema, ["username", "password"]);
+// export const userDTOSchema = t.Omit(userBaseSchema, ["password"]);
+export type UserDTO = typeof userSchemas.dto.static;
 
-export const userCreateParamsSchema = t.Object({ data: userCreateSchema });
-export type UserCreateParams = typeof userCreateParamsSchema.static;
+// export const userCreateSchema = t.Pick(userBaseSchema, ["username", "password"]);
 
-export const userCreateResponseSchema = serviceResponseSchema(userDTOSchema);
-export type UserCreateResponse = typeof userCreateResponseSchema.static;
+// export const userCreateParamsSchema = t.Object({ data: userCreateSchema });
+export type UserCreateParams = typeof userSchemas.createParams.static;
 
-export const userGetOneParamsSchema = t.Object({ id: t.String() });
-export type UserGetOneParams = typeof userGetOneParamsSchema.static;
+// export const userCreateResponseSchema = serviceResponseSchema(userDTOSchema);
+export type UserCreateResponse = typeof userSchemas.createResponse.static;
 
-export const userGetOneResponseSchema = serviceResponseSchema(t.Nullable(userDTOSchema));
-export type UserGetOneResponse = typeof userGetOneResponseSchema.static;
+// export const userGetOneParamsSchema = t.Object({ id: t.String() });
+export type UserGetOneParams = typeof userSchemas.getOneParams.static;
 
-const userGetManyByIDsParamsSchema = t.Object({ ids: t.Array(t.String()) });
-const userGetManyBySearchParamsSchema = t.Object({
-  search: t.Optional(t.String()),
-  pagination: t.Optional(paginationParamsSchema),
-});
+// export const userGetOneResponseSchema = serviceResponseSchema(t.Nullable(userDTOSchema));
+export type UserGetOneResponse = typeof userSchemas.getOneResponse.static;
 
-export const userGetManyParamsSchema = t.Union([
-  t.Intersect([userGetManyByIDsParamsSchema, t.Object({ sorting: t.Optional(sortingParamsSchema) })]),
-  t.Intersect([userGetManyBySearchParamsSchema, t.Object({ sorting: t.Optional(sortingParamsSchema) })]),
-]);
+// const userGetManyByIDsParamsSchema = t.Object({ ids: t.Array(t.String()) });
+// const userGetManyBySearchParamsSchema = t.Object({
+//   search: t.Optional(t.String()),
+//   pagination: t.Optional(paginationParamsSchema),
+// });
 
-export type UserGetManyParams = typeof userGetManyParamsSchema.static;
+// export const userGetManyParamsSchema = t.Union([
+//   t.Intersect([userGetManyByIDsParamsSchema, t.Object({ sorting: t.Optional(sortingParamsSchema) })]),
+//   t.Intersect([userGetManyBySearchParamsSchema, t.Object({ sorting: t.Optional(sortingParamsSchema) })]),
+// ]);
 
-export const userGetManyResponseSchema = serviceResponseSchema(
-  t.Array(userDTOSchema),
-  t.Object({ pagination: paginationMetaSchema })
-);
-export type UserGetManyResponse = typeof userGetManyResponseSchema.static;
+export type UserGetManyParams = typeof userSchemas.getManyParams.static;
 
-export const userGetParamsSchema = t.Union([userGetOneParamsSchema, userGetManyParamsSchema]);
-export type UserGetParams = typeof userGetParamsSchema.static;
+// export const userGetManyResponseSchema = serviceResponseSchema(
+//   t.Array(userDTOSchema),
+//   t.Object({ pagination: paginationMetaSchema })
+// );
+export type UserGetManyResponse = typeof userSchemas.getManyResponse.static;
 
-export const userGetResponseSchema = t.Union([userGetOneResponseSchema, userGetManyResponseSchema]);
-export type UserGetResponse = typeof userGetResponseSchema.static;
+// export const userGetParamsSchema = t.Union([userGetOneParamsSchema, userGetManyParamsSchema]);
+export type UserGetParams = typeof userSchemas.getParams.static;
 
-export const userUpdateSchema = t.Partial(t.Omit(userDTOSchema, ["id"]));
-export type UserUpdate = typeof userUpdateSchema.static;
+// export const userGetResponseSchema = t.Union([userGetOneResponseSchema, userGetManyResponseSchema]);
+export type UserGetResponse = typeof userSchemas.getResponse.static;
 
-export const userUpdateParamsSchema = t.Object({ id: t.String(), data: userUpdateSchema });
-export type UserUpdateParams = typeof userUpdateParamsSchema.static;
+// export const userUpdateSchema = t.Partial(t.Omit(userDTOSchema, ["id"]));
+// export type UserUpdate = typeof userSchemas.updateParams.static;
 
-export const userUpdateResponseSchema = serviceResponseSchema(t.Nullable(userDTOSchema));
-export type UserUpdateResponse = typeof userUpdateResponseSchema.static;
+// export const userUpdateParamsSchema = t.Object({ id: t.String(), data: userUpdateSchema });
+export type UserUpdateParams = typeof userSchemas.updateParams.static;
 
-export const userDeleteParamsSchema = t.Object({ id: t.String() });
-export type UserDeleteParams = typeof userDeleteParamsSchema.static;
+// export const userUpdateResponseSchema = serviceResponseSchema(t.Nullable(userDTOSchema));
+export type UserUpdateResponse = typeof userSchemas.updateResponse.static;
 
-export const userDeleteResponseSchema = serviceResponseSchema(t.Nullable(userDTOSchema));
-export type UserDeleteResponse = typeof userDeleteResponseSchema.static;
+// export const userDeleteParamsSchema = t.Object({ id: t.String() });
+export type UserDeleteParams = typeof userSchemas.deleteParams.static;
+
+// export const userDeleteResponseSchema = serviceResponseSchema(t.Nullable(userDTOSchema));
+export type UserDeleteResponse = typeof userSchemas.deleteResponse.static;

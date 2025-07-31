@@ -1,16 +1,7 @@
 import Elysia, { t } from "elysia";
 import { DrizzleUserService, type UserService } from "./service";
 import {
-  userCreateParamsSchema,
-  userCreateResponseSchema,
-  userGetOneParamsSchema,
-  userGetOneResponseSchema,
-  userGetManyParamsSchema,
-  userGetManyResponseSchema,
-  userUpdateParamsSchema,
-  userUpdateResponseSchema,
-  userDeleteParamsSchema,
-  userDeleteResponseSchema,
+  userSchemas
 } from "./model";
 
 const userService: UserService = new DrizzleUserService();
@@ -24,9 +15,9 @@ export const userRouter = new Elysia({ prefix: "/users" })
       return response;
     },
     {
-      body: userCreateParamsSchema,
+      body: userSchemas.createParams,
       response: {
-        200: userCreateResponseSchema,
+        200: userSchemas.createResponse,
       },
     }
   )
@@ -38,9 +29,9 @@ export const userRouter = new Elysia({ prefix: "/users" })
       return response;
     },
     {
-      body: userGetManyParamsSchema,
+      body: userSchemas.getManyParams,
       response: {
-        200: userGetManyResponseSchema,
+        200: userSchemas.getManyResponse,
       },
     }
   )
@@ -57,9 +48,9 @@ export const userRouter = new Elysia({ prefix: "/users" })
       return response ?? status(404, "User not found");
     },
     {
-      params: userGetOneParamsSchema,
+      params: userSchemas.getOneParams,
       response: {
-        200: userGetOneResponseSchema,
+        200: userSchemas.getOneResponse,
       },
     }
   )
@@ -71,10 +62,10 @@ export const userRouter = new Elysia({ prefix: "/users" })
       return response ?? status(404, "User not found");
     },
     {
-      body: t.Omit(userUpdateParamsSchema, ["id"]),
-      params: t.Pick(userUpdateParamsSchema, ["id"]),
+      body: t.Omit(userSchemas.updateParams, ["id"]),
+      params: t.Pick(userSchemas.updateParams, ["id"]),
       response: {
-        200: userUpdateResponseSchema,
+        200: userSchemas.updateResponse,
       },
     }
   )
@@ -86,9 +77,9 @@ export const userRouter = new Elysia({ prefix: "/users" })
       return response ?? status(404, "User not found");
     },
     {
-      params: userDeleteParamsSchema,
+      params: userSchemas.deleteParams,
       response: {
-        200: userDeleteResponseSchema,
+        200: userSchemas.deleteResponse,
       },
     }
   );

@@ -3,8 +3,21 @@ import { db } from "../../shared/db";
 import { userTable } from "../../shared/db/schema";
 import { type PaginationParams } from "../../shared/model";
 import { hashPassword } from "../../shared/utils/encryption";
-import type { UserCreateResponse, UserDeleteParams, UserDeleteResponse, UserGetManyResponse, UserGetOneResponse, UserGetResponse, UserUpdateParams, UserUpdateResponse } from "./model";
-import type { UserCreateParams, UserDTO, UserGetManyParams, UserGetOneParams, UserGetParams } from "./model";
+import type {
+  UserCreateParams,
+  UserGetManyParams,
+  UserGetOneParams,
+  UserGetParams,
+  UserCreateResponse,
+  UserDeleteParams,
+  UserDeleteResponse,
+  UserGetManyResponse,
+  UserGetOneResponse,
+  UserGetResponse,
+  UserUpdateParams,
+  UserUpdateResponse,
+  UserDTO,
+} from "./model";
 
 export interface UserService {
   create(params: UserCreateParams): Promise<UserCreateResponse>;
