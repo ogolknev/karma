@@ -1,4 +1,5 @@
 import { generateId, hashPassword } from "@/shared/utils/crypto";
+import { UserUpdateDTO } from "./dto";
 
 export class User {
   constructor(
@@ -17,5 +18,9 @@ export class User {
 
   getPasswordHash() {
     return this.passwordHash;
+  }
+
+  update(data: UserUpdateDTO) {
+    this.name = data.name ?? this.name
   }
 }
