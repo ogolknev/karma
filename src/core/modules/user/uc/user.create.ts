@@ -1,4 +1,3 @@
-import { generateId } from "@/shared/utils/crypto";
 import { UserCreateDTO } from "../dto";
 import { UsernameExistsError } from "../errors";
 import { User } from "../user.entity";
@@ -8,14 +7,15 @@ export class UserCreate {
   constructor(private userRepo: UserRepo) {}
 
   async execute(data: UserCreateDTO) {
-    const isUsernameExists = Boolean(
-      await this.userRepo.getByUsername(data.username)
+    if (await this.userRepo.getByUsername(data.username) !== null)
+      throw new UsernameExistsError(data.username);
+
+    const user = await User.create(
+      data.username,
+      data.name,
+      data.password
     );
 
-    if (isUsernameExists) throw new UsernameExistsError(data.username)
-
-    const user = new User(generateId(), data.username, data.name, data.password)
-    
-    return this.userRepo.add(user)
+    return this.userRepo.add(user);
   }
 }
