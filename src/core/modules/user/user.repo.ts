@@ -1,4 +1,5 @@
 import { FindOptions, FindResult, RepoResult } from "../common/types";
+import { UserUpdateDTO } from "./dto";
 import { User } from "./user.entity";
 
 export interface UserRepo {
@@ -13,7 +14,7 @@ export interface UserRepo {
   ): Promise<FindResult<User>>;
   findBySearch(query: string, options: FindOptions): Promise<FindResult<User>>;
 
-  update(id: string, data: User): Promise<RepoResult<User | null>>;
+  update(id: string, data: UserUpdateDTO): Promise<RepoResult<User | null>>;
 
   delete(id: string): Promise<RepoResult<User | null>>
 }
