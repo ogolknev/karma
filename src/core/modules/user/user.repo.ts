@@ -4,8 +4,8 @@ import { User } from "./user.entity";
 export interface UserRepo {
   add(data: User): Promise<RepoResult<User>>;
 
-  getById(id: string): Promise<RepoResult<User>>;
-  getByUsername(username: string): Promise<RepoResult<User>>;
+  getById(id: string): Promise<RepoResult<User | null>>;
+  getByUsername(username: string): Promise<RepoResult<User | null>>;
 
   findByWorkspace(
     workspaceId: string,
@@ -13,7 +13,7 @@ export interface UserRepo {
   ): Promise<FindResult<User>>;
   findBySearch(query: string, options: FindOptions): Promise<FindResult<User>>;
 
-  update(id: string, data: User): Promise<RepoResult<User>>;
+  update(id: string, data: User): Promise<RepoResult<User | null>>;
 
-  delete(id: string): Promise<void>
+  delete(id: string): Promise<RepoResult<User | null>>
 }
