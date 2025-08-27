@@ -1,16 +1,8 @@
-import { FindOptions, FindResult, RepoResult } from "../common/types";
+import { BaseRepo } from "../common";
+import { RepoResult } from "../common/types";
 import { UserUpdateDTO } from "./dto";
 import { User } from "./user.entity";
 
-export interface UserRepo {
-  add(data: User): Promise<RepoResult<User>>;
-
-  getById(id: string): Promise<RepoResult<User | null>>;
+export interface UserRepo extends BaseRepo<User, UserUpdateDTO> {
   getByUsername(username: string): Promise<RepoResult<User | null>>;
-
-  find(query?: string, options?: FindOptions): Promise<FindResult<User>>;
-
-  update(id: string, data: UserUpdateDTO): Promise<RepoResult<User | null>>;
-
-  delete(id: string): Promise<RepoResult<User | null>>
 }
