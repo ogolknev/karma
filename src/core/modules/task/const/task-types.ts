@@ -1,0 +1,1 @@
+export const taskTypes = ["personal", "shared"] as const
