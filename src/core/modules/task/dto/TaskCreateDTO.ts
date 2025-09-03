@@ -1,12 +1,4 @@
 import { TaskType } from "../types";
+import { BaseTask } from "../types/BaseTask";
 
-export interface TaskCreateDTO {
-  title: string;
-  authorId: string;
-  cost: number;
-  type: TaskType;
-  dueAt?: string;
-  assigneeId?: string;
-  projectId?: string;
-  description?: string;
-}
+export type TaskCreateDTO = Omit<BaseTask, 'id' | 'status' | 'createdAt'>
