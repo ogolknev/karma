@@ -26,7 +26,7 @@ export class Task extends BaseEntity<TaskUpdateDTO> {
   static async create(data: TaskCreateDTO) {
     const id = generateId();
     const status: TaskStatus = "open";
-    const created = toDatetimeString(new Date());
+    const createdAt = toDatetimeString(new Date());
 
     return new Task(
       id,
@@ -35,7 +35,7 @@ export class Task extends BaseEntity<TaskUpdateDTO> {
       data.cost,
       data.type,
       status,
-      created,
+      createdAt,
       data.dueAt,
       data.assigneeId,
       data.projectId,
