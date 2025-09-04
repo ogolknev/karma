@@ -4,8 +4,9 @@ import { TaskType } from "./types";
 import { TaskStatus } from "./types/TaskStatus";
 import { toDatetimeString } from "@/shared/utils/date";
 import { TaskUpdateDTO } from "./dto/TaskUpdateDTO";
+import { BaseEntity } from "../common";
 
-export class Task {
+export class Task extends BaseEntity<TaskUpdateDTO> {
   constructor(
     private id: string,
     private title: string,
@@ -18,9 +19,11 @@ export class Task {
     private assigneeId?: string,
     private projectId?: string,
     private description?: string
-  ) {}
+  ) {
+    super()
+  }
 
-  static create(data: TaskCreateDTO) {
+  static async create(data: TaskCreateDTO) {
     const id = generateId();
     const status: TaskStatus = "open";
     const created = toDatetimeString(new Date());
