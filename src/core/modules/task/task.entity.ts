@@ -3,20 +3,21 @@ import { TaskCreateDTO } from "./dto";
 import { TaskType } from "./types";
 import { TaskStatus } from "./types/TaskStatus";
 import { toDatetimeString } from "@/shared/utils/date";
+import { TaskUpdateDTO } from "./dto/TaskUpdateDTO";
 
 export class Task {
   constructor(
-    public id: string,
-    public title: string,
-    public authorId: string,
-    public cost: number,
-    public type: TaskType,
-    public status: TaskStatus,
-    public createdAt: string,
-    public dueAt?: string,
-    public assigneeId?: string,
-    public projectId?: string,
-    public description?: string
+    private id: string,
+    private title: string,
+    private authorId: string,
+    private cost: number,
+    private type: TaskType,
+    private status: TaskStatus,
+    private createdAt: string,
+    private dueAt?: string,
+    private assigneeId?: string,
+    private projectId?: string,
+    private description?: string
   ) {}
 
   static create(data: TaskCreateDTO) {
@@ -37,5 +38,15 @@ export class Task {
       data.projectId,
       data.description
     );
+  }
+
+  update(data: TaskUpdateDTO) {
+    this.title = data.title ?? this.title;
+    this.cost = data.cost ?? this.cost;
+    this.status = data.status ?? this.status;
+    this.dueAt = data.dueAt ?? this.dueAt;
+    this.assigneeId = data.assigneeId ?? this.assigneeId;
+    this.projectId = data.projectId ?? this.projectId;
+    this.description = data.description ?? this.description;
   }
 }
