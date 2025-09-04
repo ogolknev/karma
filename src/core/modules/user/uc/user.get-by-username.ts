@@ -1,9 +1,8 @@
+import { BaseUC } from "../../common/uc";
 import { UserRepo } from "../user.repo";
 
-export class UserGetByUsername {
-  constructor(private userRepo: UserRepo) {}
-
+export class UserGetByUsername extends BaseUC<UserRepo> {
   async execute(username: string) {
-    return await this.userRepo.getByUsername(username)
+    return await this.repo.getByUsername(username)
   }
 }
