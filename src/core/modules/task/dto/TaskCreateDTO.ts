@@ -1,4 +1,4 @@
 import { TaskType } from "../types";
-import { BaseTask } from "../types/BaseTask";
+import { BaseTaskDTO } from "./BaseTaskDTO";
 
-export type TaskCreateDTO = Omit<BaseTask, 'id' | 'status' | 'createdAt'>
+export type TaskCreateDTO = Omit<BaseTaskDTO, 'id' | 'status' | 'createdAt'>

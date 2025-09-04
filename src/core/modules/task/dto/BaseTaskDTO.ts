@@ -1,7 +1,7 @@
-import { TaskStatus } from "./TaskStatus";
-import { TaskType } from "./TaskType";
+import { TaskStatus } from "../types/TaskStatus";
+import { TaskType } from "../types/TaskType";
 
-export interface BaseTask {
+export interface BaseTaskDTO {
   id: string;
   title: string;
   authorId: string;
