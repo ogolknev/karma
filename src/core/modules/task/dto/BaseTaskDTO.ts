@@ -8,9 +8,9 @@ export interface BaseTaskDTO {
   cost: number;
   type: TaskType;
   status: TaskStatus;
-  createdAt: string;
-  dueAt?: string;
-  assigneeId?: string;
-  projectId?: string;
-  description?: string;
+  createdAt: Date;
+  dueAt?: Date | null;
+  assigneeId?: string | null;
+  projectId?: string | null;
+  description?: string | null;
 }
