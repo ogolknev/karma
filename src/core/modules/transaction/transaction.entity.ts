@@ -3,6 +3,7 @@ import { BaseEntity } from "../common";
 import { TransactionCreateDTO } from "./dto";
 import { TransactionType } from "./types/TransactionType";
 import { toDatetimeString } from "@/shared/utils/date";
+import { BaseTransactionDTO } from "./dto/BaseTransactionDTO";
 
 export class Transaction extends BaseEntity<{}> {
   constructor(
@@ -11,24 +12,36 @@ export class Transaction extends BaseEntity<{}> {
     private toId: string,
     private type: TransactionType,
     private amount: number,
-    private createdAt: string,
-    private taskId?: string
+    private createdAt: Date,
+    private taskId?: string | null
   ) {
     super();
   }
 
-  static async create(date: TransactionCreateDTO) {
+  static async create(data: TransactionCreateDTO) {
     const id = generateId();
-    const createdAt = toDatetimeString(new Date());
+    const createdAt = new Date();
 
     return new Transaction(
       id,
-      date.fromId,
-      date.toId,
-      date.type,
-      date.amount,
+      data.fromId,
+      data.toId,
+      data.type,
+      data.amount,
       createdAt,
-      date.taskId
+      data.taskId
+    );
+  }
+
+  static fromDTO({ dto }: { dto: BaseTransactionDTO }) {
+    return new Transaction(
+      dto.id,
+      dto.fromId,
+      dto.toId,
+      dto.type,
+      dto.amount,
+      dto.createdAt,
+      dto.taskId
     );
   }
 
@@ -37,5 +50,17 @@ export class Transaction extends BaseEntity<{}> {
    */
   update(_data: {}): void {
     throw new Error("Method not allowed.");
+  }
+
+  toDTO(): BaseTransactionDTO {
+    return {
+      id: this.id,
+      fromId: this.fromId,
+      toId: this.toId,
+      type: this.type,
+      amount: this.amount,
+      createdAt: this.createdAt,
+      taskId: this.taskId,
+    };
   }
 }

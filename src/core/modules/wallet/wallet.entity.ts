@@ -1,6 +1,7 @@
 import { generateId } from "@/shared/utils/crypto";
 import { BaseEntity } from "../common";
 import { WalletCreateDTO, WalletUpdateDTO } from "./dto";
+import { BaseWalletDTO } from "./dto/BaseWalletDTO";
 
 export class Wallet extends BaseEntity<WalletUpdateDTO> {
   constructor(
@@ -18,8 +19,21 @@ export class Wallet extends BaseEntity<WalletUpdateDTO> {
     return new Wallet(id, data.userId, 0, 0);
   }
 
+  static fromDTO({ dto }: { dto: BaseWalletDTO }) {
+    return new Wallet(dto.id, dto.userId, dto.karma, dto.respect);
+  }
+
   update(data: WalletUpdateDTO): void {
-    this.karma = data.karma ?? this.karma
-    this.respect = data.respect ?? this.respect
+    this.karma = data.karma ?? this.karma;
+    this.respect = data.respect ?? this.respect;
+  }
+
+  toDTO(): BaseWalletDTO {
+    return {
+      id: this.id,
+      userId: this.userId,
+      karma: this.karma,
+      respect: this.respect,
+    };
   }
 }

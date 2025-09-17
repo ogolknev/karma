@@ -1,5 +1,5 @@
 import { generateId, hashPassword } from "@/shared/utils/crypto";
-import { UserCreateDTO, UserUpdateDTO } from "./dto";
+import { BaseUserDTO, UserCreateDTO, UserUpdateDTO } from "./dto";
 import { BaseEntity } from "../common";
 
 export class User extends BaseEntity<UserUpdateDTO> {
@@ -19,11 +19,20 @@ export class User extends BaseEntity<UserUpdateDTO> {
     return new User(id, data.name, data.username, passwordHash);
   }
 
-  getPasswordHash() {
-    return this.passwordHash;
+  static fromDTO({ dto }: { dto: BaseUserDTO }) {
+    return new User(dto.id, dto.name, dto.username, dto.passwordHash);
   }
 
   update(data: UserUpdateDTO) {
     this.name = data.name ?? this.name;
+  }
+
+  toDTO(): BaseUserDTO {
+    return {
+      id: this.id,
+      name: this.name,
+      username: this.username,
+      passwordHash: this.passwordHash,
+    };
   }
 }

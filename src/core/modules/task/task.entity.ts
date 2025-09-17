@@ -1,5 +1,5 @@
 import { generateId } from "@/shared/utils/crypto";
-import { TaskCreateDTO } from "./dto";
+import { TaskCreateDTO, BaseTaskDTO } from "./dto";
 import { TaskType } from "./types";
 import { TaskStatus } from "./types/TaskStatus";
 import { toDatetimeString } from "@/shared/utils/date";
@@ -14,19 +14,19 @@ export class Task extends BaseEntity<TaskUpdateDTO> {
     private cost: number,
     private type: TaskType,
     private status: TaskStatus,
-    private createdAt: string,
-    private dueAt?: string,
-    private assigneeId?: string,
-    private projectId?: string,
-    private description?: string
+    private createdAt: Date,
+    private dueAt?: Date | null,
+    private assigneeId?: string | null,
+    private projectId?: string | null,
+    private description?: string | null
   ) {
-    super()
+    super();
   }
 
   static async create(data: TaskCreateDTO) {
     const id = generateId();
     const status: TaskStatus = "open";
-    const createdAt = toDatetimeString(new Date());
+    const createdAt = new Date();
 
     return new Task(
       id,
@@ -43,6 +43,22 @@ export class Task extends BaseEntity<TaskUpdateDTO> {
     );
   }
 
+  static fromDTO({ dto }: { dto: BaseTaskDTO }) {
+    return new Task(
+      dto.id,
+      dto.title,
+      dto.authorId,
+      dto.cost,
+      dto.type,
+      dto.status,
+      dto.createdAt,
+      dto.dueAt,
+      dto.assigneeId,
+      dto.projectId,
+      dto.description
+    );
+  }
+
   update(data: TaskUpdateDTO) {
     this.title = data.title ?? this.title;
     this.cost = data.cost ?? this.cost;
@@ -51,5 +67,21 @@ export class Task extends BaseEntity<TaskUpdateDTO> {
     this.assigneeId = data.assigneeId ?? this.assigneeId;
     this.projectId = data.projectId ?? this.projectId;
     this.description = data.description ?? this.description;
+  }
+
+  toDTO(): BaseTaskDTO {
+    return {
+      id: this.id,
+      title: this.title,
+      authorId: this.authorId,
+      cost: this.cost,
+      type: this.type,
+      status: this.status,
+      createdAt: this.createdAt,
+      dueAt: this.dueAt,
+      assigneeId: this.assigneeId,
+      projectId: this.projectId,
+      description: this.description,
+    };
   }
 }
