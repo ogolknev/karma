@@ -1,8 +1,8 @@
-export interface FilterOption {
-  filters: Filter[]
+export interface FilterOption<T extends object> {
+  filters: FilterDTO<T>[];
 }
 
-interface Filter {
-  key: string
-  value: string
+interface FilterDTO<T extends object> {
+  key: keyof T;
+  value: string;
 }
