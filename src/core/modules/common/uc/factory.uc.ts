@@ -3,17 +3,18 @@ import { BaseRepo } from "../base.repo";
 import { FindOptions } from "../types";
 import { BaseUC } from "./base.uc";
 
-type UCContructor<Repo extends BaseRepo<any, any>> = new (
+type UCContructor<Repo extends BaseRepo<any, any, any>> = new (
   repo: Repo,
   ...args: any[]
 ) => BaseUC<Repo>;
-type UCs<Repo extends BaseRepo<any, any>> = Record<string, UCContructor<Repo>>;
+type UCs<Repo extends BaseRepo<any, any, any>> = Record<string, UCContructor<Repo>>;
 
 export function createUCs<
   CreateDTO extends object,
   UpdateDTO extends object,
+  BaseDTO extends object,
   Entity extends BaseEntity<UpdateDTO>,
-  Repo extends BaseRepo<Entity, UpdateDTO>,
+  Repo extends BaseRepo<Entity, BaseDTO, UpdateDTO>,
   ExtraUCs extends UCs<any> = {}
 >(
   entityCls: {
@@ -50,7 +51,7 @@ export function createUCs<
       options,
     }: {
       query?: string;
-      options?: FindOptions;
+      options?: FindOptions<BaseDTO>;
     }) {
       return await this.repo.find({ query, options });
     }

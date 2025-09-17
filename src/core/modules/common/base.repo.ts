@@ -1,6 +1,6 @@
 import { FindOptions, FindResult, RepoResult } from "./types";
 
-export interface BaseRepo<Entity, UpdateDTO> {
+export interface BaseRepo<Entity, BaseDTO extends object, UpdateDTO> {
   add({ data }: { data: Entity }): Promise<RepoResult<Entity>>;
   getById({ id }: { id: string }): Promise<RepoResult<Entity | null>>;
   find({
@@ -8,7 +8,7 @@ export interface BaseRepo<Entity, UpdateDTO> {
     options,
   }: {
     query?: string;
-    options?: FindOptions;
+    options?: FindOptions<BaseDTO>;
   }): Promise<FindResult<Entity>>;
   update({
     id,
