@@ -1,5 +1,5 @@
 import { taskStatuses, taskTypes } from "@/core/modules/task/const";
-import { transactionTypes } from "@/core/modules/transaction/const/transaction-types";
+import { transactionTypes } from "@/core/modules/transaction/const";
 import {
   integer,
   pgEnum,
@@ -22,9 +22,9 @@ export const tasksTable = pgTable("tasks", {
   id: uuid("id").primaryKey(),
   title: varchar("title").notNull(),
   description: varchar("description"),
-  cost: integer("cost").default(0),
-  type: taskTypeEnum("type").default("personal"),
-  status: taskStatusEnum("status").default("open"),
+  cost: integer("cost").default(0).notNull(),
+  type: taskTypeEnum("type").default("personal").notNull(),
+  status: taskStatusEnum("status").default("open").notNull(),
   dueAt: timestamp("due_at"),
   projectId: uuid("project_id"),
   assigneeId: uuid("assignee_id").references(() => usersTable.id),
@@ -41,8 +41,8 @@ export const walletsTable = pgTable("wallets", {
     .references(() => usersTable.id, {
       onDelete: "cascade",
     }),
-  karma: integer("karma").default(0),
-  respect: integer("respect").default(0),
+  karma: integer("karma").default(0).notNull(),
+  respect: integer("respect").default(0).notNull(),
 });
 
 export const transactionTypeEnum = pgEnum("transaction_type", transactionTypes);
@@ -51,9 +51,11 @@ export const transactionsTable = pgTable("transactions", {
   fromId: uuid("from_id")
     .notNull()
     .references(() => walletsTable.id),
-  toId: uuid("to_id").references(() => walletsTable.id),
+  toId: uuid("to_id")
+    .references(() => walletsTable.id)
+    .notNull(),
   type: transactionTypeEnum("type").notNull(),
   amount: integer("amount").notNull(),
   taskId: uuid("task_id").references(() => tasksTable.id),
-  createdAt: timestamp("created_at").notNull()
+  createdAt: timestamp("created_at").notNull(),
 });
