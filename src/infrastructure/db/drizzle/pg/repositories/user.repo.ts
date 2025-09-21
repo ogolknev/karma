@@ -6,14 +6,16 @@ import {
 } from "@/core/modules/common/types";
 import { User, UserRepo } from "@/core/modules/user";
 import { BaseUserDTO, UserUpdateDTO } from "@/core/modules/user/dto";
-import { db } from "..";
 import { usersTable } from "../schema";
 import { and, count, eq, SQL } from "drizzle-orm";
 import { NotCreatedError } from "@/core/modules/common";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 export class PgUserRepo implements UserRepo {
+  constructor(protected db: NodePgDatabase<any>) {}
+
   async getByUsername(username: string): Promise<RepoResult<User | null>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .select()
       .from(usersTable)
       .where(eq(usersTable.username, username));
@@ -25,7 +27,7 @@ export class PgUserRepo implements UserRepo {
   }
 
   async add({ data }: { data: User }): Promise<RepoResult<User>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .insert(usersTable)
       .values(data.toDTO())
       .returning();
@@ -40,7 +42,7 @@ export class PgUserRepo implements UserRepo {
   }
 
   async getById({ id }: { id: string }): Promise<RepoResult<User | null>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .select()
       .from(usersTable)
       .where(eq(usersTable.id, id));
@@ -65,7 +67,7 @@ export class PgUserRepo implements UserRepo {
       }
     }
 
-    const [{ count: total }] = await db
+    const [{ count: total }] = await this.db
       .select({ count: count() })
       .from(usersTable);
 
@@ -75,7 +77,7 @@ export class PgUserRepo implements UserRepo {
       total,
     };
 
-    const queryResult = await db
+    const queryResult = await this.db
       .select()
       .from(usersTable)
       .where(and(...filters))
@@ -96,7 +98,7 @@ export class PgUserRepo implements UserRepo {
     id: string;
     data: UserUpdateDTO;
   }): Promise<RepoResult<User | null, undefined>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .update(usersTable)
       .set(data)
       .where(eq(usersTable.id, id))
@@ -112,7 +114,7 @@ export class PgUserRepo implements UserRepo {
   }: {
     id: string;
   }): Promise<RepoResult<User | null, undefined>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .delete(usersTable)
       .where(eq(usersTable.id, id))
       .returning();

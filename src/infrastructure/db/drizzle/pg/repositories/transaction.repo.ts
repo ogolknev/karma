@@ -8,12 +8,14 @@ import { TransactionUpdateDTO } from "@/core/modules/transaction/dto";
 import { BaseTransactionDTO } from "@/core/modules/transaction/dto/BaseTransactionDTO";
 import { Transaction } from "@/core/modules/transaction/transaction.entity";
 import { TransactionRepo } from "@/core/modules/transaction/transaction.repo";
-import { db } from "..";
 import { transactionsTable } from "../schema";
 import { NotCreatedError } from "@/core/modules/common";
 import { and, count, eq, SQL } from "drizzle-orm";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 export class PgTransactionRepo implements TransactionRepo {
+  constructor(protected db: NodePgDatabase<any>) {}
+
   findByUserId({
     userId,
     options,
@@ -33,7 +35,7 @@ export class PgTransactionRepo implements TransactionRepo {
     throw new Error("Method not implemented.");
   }
   async add({ data }: { data: Transaction }): Promise<RepoResult<Transaction>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .insert(transactionsTable)
       .values(data.toDTO())
       .returning();
@@ -51,7 +53,7 @@ export class PgTransactionRepo implements TransactionRepo {
   }: {
     id: string;
   }): Promise<RepoResult<Transaction | null, undefined>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .select()
       .from(transactionsTable)
       .where(eq(transactionsTable.id, id));
@@ -77,7 +79,7 @@ export class PgTransactionRepo implements TransactionRepo {
       }
     }
 
-    const [{ count: total }] = await db
+    const [{ count: total }] = await this.db
       .select({ count: count() })
       .from(transactionsTable);
 
@@ -87,7 +89,7 @@ export class PgTransactionRepo implements TransactionRepo {
       total,
     };
 
-    const queryResult = await db
+    const queryResult = await this.db
       .select()
       .from(transactionsTable)
       .where(and(...filters))
@@ -109,7 +111,7 @@ export class PgTransactionRepo implements TransactionRepo {
     id: string;
     data: TransactionUpdateDTO;
   }): Promise<RepoResult<Transaction | null>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .update(transactionsTable)
       .set(data)
       .where(eq(transactionsTable.id, id))
@@ -128,7 +130,7 @@ export class PgTransactionRepo implements TransactionRepo {
   }: {
     id: string;
   }): Promise<RepoResult<Transaction | null>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .delete(transactionsTable)
       .where(eq(transactionsTable.id, id))
       .returning();

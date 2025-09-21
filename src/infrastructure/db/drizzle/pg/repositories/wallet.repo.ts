@@ -7,18 +7,20 @@ import {
 import { WalletRepo } from "@/core/modules/wallet";
 import { BaseWalletDTO } from "@/core/modules/wallet/dto/BaseWalletDTO";
 import { Wallet } from "@/core/modules/wallet/wallet.entity";
-import { db } from "..";
 import { walletsTable } from "../schema";
 import { NotCreatedError } from "@/core/modules/common";
 import { and, count, eq, SQL } from "drizzle-orm";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 export class PgWalletRepo implements WalletRepo {
+  constructor(protected db: NodePgDatabase<any>) {}
+
   async add({
     data,
   }: {
     data: Wallet;
   }): Promise<RepoResult<Wallet, undefined>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .insert(walletsTable)
       .values(data.toDTO())
       .returning();
@@ -36,7 +38,7 @@ export class PgWalletRepo implements WalletRepo {
   }: {
     id: string;
   }): Promise<RepoResult<Wallet | null, undefined>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .select()
       .from(walletsTable)
       .where(eq(walletsTable.id, id));
@@ -61,7 +63,7 @@ export class PgWalletRepo implements WalletRepo {
       }
     }
 
-    const [{ count: total }] = await db
+    const [{ count: total }] = await this.db
       .select({ count: count() })
       .from(walletsTable);
 
@@ -71,7 +73,7 @@ export class PgWalletRepo implements WalletRepo {
       total,
     };
 
-    const queryResult = await db
+    const queryResult = await this.db
       .select()
       .from(walletsTable)
       .where(and(...filters))
@@ -92,7 +94,10 @@ export class PgWalletRepo implements WalletRepo {
     id: string;
     data: Partial<Omit<BaseWalletDTO, "id" | "userId">>;
   }): Promise<RepoResult<Wallet | null, undefined>> {
-    const queryResult = await db.update(walletsTable).set(data).returning();
+    const queryResult = await this.db
+      .update(walletsTable)
+      .set(data)
+      .returning();
 
     return {
       data:
@@ -105,7 +110,7 @@ export class PgWalletRepo implements WalletRepo {
   }: {
     id: string;
   }): Promise<RepoResult<Wallet | null, undefined>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .delete(walletsTable)
       .where(eq(walletsTable.id, id))
       .returning();

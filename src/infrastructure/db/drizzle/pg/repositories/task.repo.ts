@@ -4,7 +4,6 @@ import {
   FindResult,
   PaginationMeta,
 } from "@/core/modules/common/types";
-import { db } from "..";
 import { and, count, eq, SQL } from "drizzle-orm";
 import { NotCreatedError } from "@/core/modules/common";
 import { TaskRepo } from "@/core/modules/task/task.repo";
@@ -12,10 +11,13 @@ import { Task } from "@/core/modules/task/task.entity";
 import { tasksTable } from "../schema";
 import { BaseTaskDTO } from "@/core/modules/task/dto";
 import { TaskUpdateDTO } from "@/core/modules/task/dto/TaskUpdateDTO";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 export class PgTaskRepo implements TaskRepo {
+  constructor(protected db: NodePgDatabase<any>) {}
+
   async add({ data }: { data: Task }): Promise<RepoResult<Task>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .insert(tasksTable)
       .values(data.toDTO())
       .returning();
@@ -30,7 +32,7 @@ export class PgTaskRepo implements TaskRepo {
   }
 
   async getById({ id }: { id: string }): Promise<RepoResult<Task | null>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .select()
       .from(tasksTable)
       .where(eq(tasksTable.id, id));
@@ -55,7 +57,7 @@ export class PgTaskRepo implements TaskRepo {
       }
     }
 
-    const [{ count: total }] = await db
+    const [{ count: total }] = await this.db
       .select({ count: count() })
       .from(tasksTable);
 
@@ -65,7 +67,7 @@ export class PgTaskRepo implements TaskRepo {
       total,
     };
 
-    const queryResult = await db
+    const queryResult = await this.db
       .select()
       .from(tasksTable)
       .where(and(...filters))
@@ -86,7 +88,7 @@ export class PgTaskRepo implements TaskRepo {
     id: string;
     data: TaskUpdateDTO;
   }): Promise<RepoResult<Task | null, undefined>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .update(tasksTable)
       .set(data)
       .where(eq(tasksTable.id, id))
@@ -102,7 +104,7 @@ export class PgTaskRepo implements TaskRepo {
   }: {
     id: string;
   }): Promise<RepoResult<Task | null, undefined>> {
-    const queryResult = await db
+    const queryResult = await this.db
       .delete(tasksTable)
       .where(eq(tasksTable.id, id))
       .returning();
