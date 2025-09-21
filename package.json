@@ -3,7 +3,10 @@
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "generate:migrations": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate"
+    "migrate": "drizzle-kit migrate",
+    "test:generate:migrations": "drizzle-kit generate --config=test.drizzle.config.ts",
+    "test:migrate": "drizzle-kit migrate --config=test.drizzle.config.ts",
+    "test:push": "drizzle-kit push --config=test.drizzle.config.ts"
   },
   "dependencies": {
     "argon2": "^0.44.0",
@@ -17,6 +20,7 @@
     "@types/bun": "latest",
     "@types/pg": "^8.15.5",
     "drizzle-kit": "^0.31.4",
-    "tsx": "^4.20.5"
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
   }
 }
