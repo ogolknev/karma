@@ -1,1 +1,1 @@
-export { CamelCase } from "./CamelCase";
+export type { CamelCase } from "./CamelCase";

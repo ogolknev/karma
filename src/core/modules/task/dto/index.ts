@@ -1,2 +1,2 @@
-export { TaskCreateDTO } from "./TaskCreateDTO";
-export { BaseTaskDTO } from "./BaseTaskDTO";
+export type { TaskCreateDTO } from "./TaskCreateDTO";
+export type { BaseTaskDTO } from "./BaseTaskDTO";

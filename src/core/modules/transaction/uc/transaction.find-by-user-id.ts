@@ -1,5 +1,6 @@
 import { FindOptions } from "../../common/types";
 import { BaseUC } from "../../common/uc";
+import { BaseTransactionDTO } from "../dto/BaseTransactionDTO";
 import { TransactionRepo } from "../transaction.repo";
 
 export class TransactionFindByUserId extends BaseUC<TransactionRepo> {
@@ -8,7 +9,7 @@ export class TransactionFindByUserId extends BaseUC<TransactionRepo> {
     options,
   }: {
     id: string;
-    options?: FindOptions;
+    options?: FindOptions<BaseTransactionDTO>;
   }) {
     return await this.repo.findByUserId({ userId, options });
   }

@@ -1,5 +1,5 @@
 import { BaseEntity } from "../base.entity";
-import { BaseRepo } from "../base.repo";
+import type { BaseRepo } from "../base.repo";
 import { FindOptions } from "../types";
 import { BaseUC } from "./base.uc";
 

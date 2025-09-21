@@ -1,1 +1,1 @@
-export { WalletRepo } from "./wallet.repo";
+export type { WalletRepo } from "./wallet.repo";

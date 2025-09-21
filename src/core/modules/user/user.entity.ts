@@ -1,4 +1,8 @@
-import { generateId, hashPassword } from "@/shared/utils/crypto";
+import {
+  generateId,
+  hashPassword,
+  verifyPassword,
+} from "@/shared/utils/crypto";
 import { BaseUserDTO, UserCreateDTO, UserUpdateDTO } from "./dto";
 import { BaseEntity } from "../common";
 
@@ -34,5 +38,9 @@ export class User extends BaseEntity<UserUpdateDTO> {
       username: this.username,
       passwordHash: this.passwordHash,
     };
+  }
+
+  async verify(password: string) {
+    return verifyPassword(this.passwordHash, password);
   }
 }

@@ -1,2 +1,2 @@
-export { WalletUpdateDTO } from "./WalletUpdateDTO";
-export { WalletCreateDTO } from "./WalletCreateDTO";
+export type { WalletUpdateDTO } from "./WalletUpdateDTO";
+export type { WalletCreateDTO } from "./WalletCreateDTO";

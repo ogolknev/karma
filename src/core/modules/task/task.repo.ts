@@ -1,4 +1,4 @@
-import { BaseRepo } from "../common";
+import type { BaseRepo } from "../common";
 import { BaseTaskDTO } from "./dto/BaseTaskDTO";
 import { TaskUpdateDTO } from "./dto/TaskUpdateDTO";
 import { Task } from "./task.entity";

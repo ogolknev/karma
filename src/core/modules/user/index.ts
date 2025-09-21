@@ -1,2 +1,2 @@
 export { User } from "./user.entity";
-export { UserRepo } from "./user.repo";
+export type { UserRepo } from "./user.repo";

@@ -1,4 +1,4 @@
-import { BaseRepo } from "../common";
+import type { BaseRepo } from "../common";
 import { FindOptions, FindResult, RepoResult } from "../common/types";
 import { TransactionUpdateDTO } from "./dto";
 import { BaseTransactionDTO } from "./dto/BaseTransactionDTO";

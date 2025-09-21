@@ -1,4 +1,4 @@
-import { BaseRepo } from "../common";
+import type { BaseRepo } from "../common";
 import { RepoResult } from "../common/types";
 import { BaseUserDTO, UserUpdateDTO } from "./dto";
 import { User } from "./user.entity";

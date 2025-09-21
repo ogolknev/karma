@@ -1,2 +1,2 @@
-export { TransactionCreateDTO } from "./TransactionCreateDTO";
-export { TransactionUpdateDTO } from "./TransactionUpdateDTO";
+export type { TransactionCreateDTO } from "./TransactionCreateDTO";
+export type { TransactionUpdateDTO } from "./TransactionUpdateDTO";

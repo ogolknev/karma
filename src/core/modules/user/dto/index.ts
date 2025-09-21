@@ -1,3 +1,3 @@
-export { UserCreateDTO } from "./UserCreateDTO";
-export { UserUpdateDTO } from "./UserUpdateDTO";
-export { BaseUserDTO } from "./BaseUserDTO";
+export type { UserCreateDTO } from "./UserCreateDTO";
+export type { UserUpdateDTO } from "./UserUpdateDTO";
+export type { BaseUserDTO } from "./BaseUserDTO";
