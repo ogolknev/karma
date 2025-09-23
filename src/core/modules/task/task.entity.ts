@@ -8,17 +8,17 @@ import { BaseEntity } from "../common";
 
 export class Task extends BaseEntity<TaskUpdateDTO> {
   constructor(
-    private id: string,
-    private title: string,
-    private authorId: string,
-    private cost: number,
-    private type: TaskType,
-    private status: TaskStatus,
-    private createdAt: Date,
-    private dueAt?: Date | null,
-    private assigneeId?: string | null,
-    private projectId?: string | null,
-    private description?: string | null
+    public id: string,
+    public title: string,
+    public authorId: string,
+    public cost: number,
+    public type: TaskType,
+    public status: TaskStatus,
+    public createdAt: Date,
+    public dueAt: Date | null = null,
+    public assigneeId: string | null = null,
+    public projectId: string | null = null,
+    public description: string | null = null
   ) {
     super();
   }

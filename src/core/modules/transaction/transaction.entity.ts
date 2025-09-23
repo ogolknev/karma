@@ -7,13 +7,13 @@ import { BaseTransactionDTO } from "./dto/BaseTransactionDTO";
 
 export class Transaction extends BaseEntity<{}> {
   constructor(
-    private id: string,
-    private fromId: string,
-    private toId: string,
-    private type: TransactionType,
-    private amount: number,
-    private createdAt: Date,
-    private taskId?: string | null
+    public id: string,
+    public fromId: string,
+    public toId: string,
+    public type: TransactionType,
+    public amount: number,
+    public createdAt: Date,
+    public taskId: string | null = null
   ) {
     super();
   }

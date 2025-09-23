@@ -5,10 +5,10 @@ import { BaseWalletDTO } from "./dto/BaseWalletDTO";
 
 export class Wallet extends BaseEntity<WalletUpdateDTO> {
   constructor(
-    private id: string,
-    private userId: string,
-    private karma: number,
-    private respect: number
+    public id: string,
+    public userId: string,
+    public karma: number,
+    public respect: number
   ) {
     super();
   }
