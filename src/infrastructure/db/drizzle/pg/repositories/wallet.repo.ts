@@ -30,7 +30,7 @@ export class PgWalletRepo implements WalletRepo {
     }
 
     return {
-      data: Wallet.fromDTO({ dto: queryResult[0] }),
+      data: Wallet.fromDTO({ data: queryResult[0] }),
     };
   }
   async getById({
@@ -45,7 +45,7 @@ export class PgWalletRepo implements WalletRepo {
 
     return {
       data:
-        queryResult.length > 0 ? Wallet.fromDTO({ dto: queryResult[0] }) : null,
+        queryResult.length > 0 ? Wallet.fromDTO({ data: queryResult[0] }) : null,
     };
   }
 
@@ -81,7 +81,7 @@ export class PgWalletRepo implements WalletRepo {
       .limit(pagination.limit);
 
     return {
-      data: queryResult.map((dto) => Wallet.fromDTO({ dto })),
+      data: queryResult.map((dto) => Wallet.fromDTO({ data: dto })),
       meta: {
         pagination,
       },
@@ -101,7 +101,7 @@ export class PgWalletRepo implements WalletRepo {
 
     return {
       data:
-        queryResult.length > 0 ? Wallet.fromDTO({ dto: queryResult[0] }) : null,
+        queryResult.length > 0 ? Wallet.fromDTO({ data: queryResult[0] }) : null,
     };
   }
 
@@ -117,7 +117,7 @@ export class PgWalletRepo implements WalletRepo {
 
     return {
       data:
-        queryResult.length > 0 ? Wallet.fromDTO({ dto: queryResult[0] }) : null,
+        queryResult.length > 0 ? Wallet.fromDTO({ data: queryResult[0] }) : null,
     };
   }
 }

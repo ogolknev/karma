@@ -33,15 +33,15 @@ export class Transaction extends BaseEntity<{}> {
     );
   }
 
-  static fromDTO({ dto }: { dto: BaseTransactionDTO }) {
+  static fromDTO({ data }: { data: BaseTransactionDTO }) {
     return new Transaction(
-      dto.id,
-      dto.fromId,
-      dto.toId,
-      dto.type,
-      dto.amount,
-      dto.createdAt,
-      dto.taskId
+      data.id,
+      data.fromId,
+      data.toId,
+      data.type,
+      data.amount,
+      data.createdAt,
+      data.taskId
     );
   }
 

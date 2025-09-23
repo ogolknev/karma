@@ -27,7 +27,7 @@ export class PgTaskRepo implements TaskRepo {
     }
 
     return {
-      data: Task.fromDTO({ dto: queryResult[0] }),
+      data: Task.fromDTO({ data: queryResult[0] }),
     };
   }
 
@@ -39,7 +39,7 @@ export class PgTaskRepo implements TaskRepo {
 
     return {
       data:
-        queryResult.length > 0 ? Task.fromDTO({ dto: queryResult[0] }) : null,
+        queryResult.length > 0 ? Task.fromDTO({ data: queryResult[0] }) : null,
     };
   }
 
@@ -75,7 +75,7 @@ export class PgTaskRepo implements TaskRepo {
       .limit(pagination.limit);
 
     return {
-      data: queryResult.map((dto) => Task.fromDTO({ dto })),
+      data: queryResult.map((dto) => Task.fromDTO({ data: dto })),
       meta: {
         pagination,
       },
@@ -96,7 +96,7 @@ export class PgTaskRepo implements TaskRepo {
 
     return {
       data:
-        queryResult.length > 0 ? Task.fromDTO({ dto: queryResult[0] }) : null,
+        queryResult.length > 0 ? Task.fromDTO({ data: queryResult[0] }) : null,
     };
   }
   async delete({
@@ -111,7 +111,7 @@ export class PgTaskRepo implements TaskRepo {
 
     return {
       data:
-        queryResult.length > 0 ? Task.fromDTO({ dto: queryResult[0] }) : null,
+        queryResult.length > 0 ? Task.fromDTO({ data: queryResult[0] }) : null,
     };
   }
 }

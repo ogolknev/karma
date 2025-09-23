@@ -23,8 +23,8 @@ export class User extends BaseEntity<UserUpdateDTO> {
     return new User(id, data.name, data.username, passwordHash);
   }
 
-  static fromDTO({ dto }: { dto: BaseUserDTO }) {
-    return new User(dto.id, dto.name, dto.username, dto.passwordHash);
+  static fromDTO({ data }: { data: BaseUserDTO }) {
+    return new User(data.id, data.name, data.username, data.passwordHash);
   }
 
   update(data: UserUpdateDTO) {

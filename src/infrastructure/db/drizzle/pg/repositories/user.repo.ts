@@ -22,7 +22,7 @@ export class PgUserRepo implements UserRepo {
 
     return {
       data:
-        queryResult.length > 0 ? User.fromDTO({ dto: queryResult[0] }) : null,
+        queryResult.length > 0 ? User.fromDTO({ data: queryResult[0] }) : null,
     };
   }
 
@@ -37,7 +37,7 @@ export class PgUserRepo implements UserRepo {
     }
 
     return {
-      data: User.fromDTO({ dto: queryResult[0] }),
+      data: User.fromDTO({ data: queryResult[0] }),
     };
   }
 
@@ -49,7 +49,7 @@ export class PgUserRepo implements UserRepo {
 
     return {
       data:
-        queryResult.length > 0 ? User.fromDTO({ dto: queryResult[0] }) : null,
+        queryResult.length > 0 ? User.fromDTO({ data: queryResult[0] }) : null,
     };
   }
 
@@ -85,7 +85,7 @@ export class PgUserRepo implements UserRepo {
       .limit(pagination.limit);
 
     return {
-      data: queryResult.map((dto) => User.fromDTO({ dto })),
+      data: queryResult.map((dto) => User.fromDTO({ data: dto })),
       meta: {
         pagination,
       },
@@ -106,7 +106,7 @@ export class PgUserRepo implements UserRepo {
 
     return {
       data:
-        queryResult.length > 0 ? User.fromDTO({ dto: queryResult[0] }) : null,
+        queryResult.length > 0 ? User.fromDTO({ data: queryResult[0] }) : null,
     };
   }
   async delete({
@@ -121,7 +121,7 @@ export class PgUserRepo implements UserRepo {
 
     return {
       data:
-        queryResult.length > 0 ? User.fromDTO({ dto: queryResult[0] }) : null,
+        queryResult.length > 0 ? User.fromDTO({ data: queryResult[0] }) : null,
     };
   }
 }

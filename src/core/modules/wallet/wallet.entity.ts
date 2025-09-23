@@ -19,8 +19,8 @@ export class Wallet extends BaseEntity<WalletUpdateDTO> {
     return new Wallet(id, data.userId, 0, 0);
   }
 
-  static fromDTO({ dto }: { dto: BaseWalletDTO }) {
-    return new Wallet(dto.id, dto.userId, dto.karma, dto.respect);
+  static fromDTO({ data }: { data: BaseWalletDTO }) {
+    return new Wallet(data.id, data.userId, data.karma, data.respect);
   }
 
   update(data: WalletUpdateDTO): void {

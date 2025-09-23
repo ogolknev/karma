@@ -43,19 +43,19 @@ export class Task extends BaseEntity<TaskUpdateDTO> {
     );
   }
 
-  static fromDTO({ dto }: { dto: BaseTaskDTO }) {
+  static fromDTO({ data }: { data: BaseTaskDTO }) {
     return new Task(
-      dto.id,
-      dto.title,
-      dto.authorId,
-      dto.cost,
-      dto.type,
-      dto.status,
-      dto.createdAt,
-      dto.dueAt,
-      dto.assigneeId,
-      dto.projectId,
-      dto.description
+      data.id,
+      data.title,
+      data.authorId,
+      data.cost,
+      data.type,
+      data.status,
+      data.createdAt,
+      data.dueAt,
+      data.assigneeId,
+      data.projectId,
+      data.description
     );
   }
 

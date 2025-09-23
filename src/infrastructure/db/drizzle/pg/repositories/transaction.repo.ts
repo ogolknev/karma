@@ -45,7 +45,7 @@ export class PgTransactionRepo implements TransactionRepo {
     }
 
     return {
-      data: Transaction.fromDTO({ dto: queryResult[0] }),
+      data: Transaction.fromDTO({ data: queryResult[0] }),
     };
   }
   async getById({
@@ -61,7 +61,7 @@ export class PgTransactionRepo implements TransactionRepo {
     return {
       data:
         queryResult.length > 0
-          ? Transaction.fromDTO({ dto: queryResult[0] })
+          ? Transaction.fromDTO({ data: queryResult[0] })
           : null,
     };
   }
@@ -97,7 +97,7 @@ export class PgTransactionRepo implements TransactionRepo {
       .limit(pagination.limit);
 
     return {
-      data: queryResult.map((dto) => Transaction.fromDTO({ dto })),
+      data: queryResult.map((dto) => Transaction.fromDTO({ data: dto })),
       meta: {
         pagination,
       },
@@ -120,7 +120,7 @@ export class PgTransactionRepo implements TransactionRepo {
     return {
       data:
         queryResult.length > 0
-          ? Transaction.fromDTO({ dto: queryResult[0] })
+          ? Transaction.fromDTO({ data: queryResult[0] })
           : null,
     };
   }
@@ -138,7 +138,7 @@ export class PgTransactionRepo implements TransactionRepo {
     return {
       data:
         queryResult.length > 0
-          ? Transaction.fromDTO({ dto: queryResult[0] })
+          ? Transaction.fromDTO({ data: queryResult[0] })
           : null,
     };
   }
