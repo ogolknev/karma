@@ -4,16 +4,13 @@ import {
   describe,
   expect,
   it,
-  setDefaultTimeout,
 } from "bun:test";
-import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
+import { drizzle } from "drizzle-orm/node-postgres";
 import { PgUserRepo } from "@/infrastructure/db/drizzle/pg/repositories/user.repo";
-import * as schema from "@/infrastructure/db/drizzle/pg/schema";
 import { User } from "@/core/modules/user";
 import config from "@/shared/config";
 import { execBeforeAll } from "./utils/exec-before-all";
 import { execAfterAll } from "./utils/exec-after-all";
-import { BaseEntity, BaseRepo } from "@/core/modules/common";
 import { shouldCRUD } from "./utils";
 
 describe("User Repository", async () => {
@@ -42,7 +39,6 @@ describe("User Repository", async () => {
   });
 
   beforeAll(async () => {
-    console.log("Before all...");
     await execBeforeAll();
 
     console.log("Fill database...");
@@ -62,6 +58,7 @@ describe("User Repository", async () => {
     repo: userRepo,
     db,
     fieldForUpdate: "name",
+    valueForUpdate: 'Petr'
   });
 
   it("Gets user by username", async () => {

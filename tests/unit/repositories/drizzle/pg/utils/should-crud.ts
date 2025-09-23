@@ -131,24 +131,29 @@ async function shouldDeletes<T extends BaseEntity<any> & { id: string }>({
   await repo.add({ data: entity });
 }
 
-export async function shouldCRUD<T extends BaseEntity<any> & { id: string }>({
+export async function shouldCRUD<
+  T extends BaseEntity<any> & { id: string },
+  K extends keyof T
+>({
   entityName,
   entities,
   entityToAdd,
   repo,
   fieldForUpdate,
+  valueForUpdate,
   db,
 }: {
   entityName: [string, string];
   entities: T[];
   entityToAdd: T;
   repo: BaseRepo<T, any, any>;
-  fieldForUpdate: keyof T;
+  fieldForUpdate?: K;
+  valueForUpdate?: T[K];
   db: NodePgDatabase<any>;
 }) {
   const entity = entities[0];
 
-  it("Starts and fills database", async () =>
+  it(`Starts and fills database for test ${entityName[0]} repository`, async () =>
     await shouldStartsAndFillsDB({ db, repo }));
   it(`Creates ${entityName[0]}`, async () =>
     await shouldCreates({ entity: entityToAdd, repo }));
@@ -158,8 +163,15 @@ export async function shouldCRUD<T extends BaseEntity<any> & { id: string }>({
     shouldGetSpecifiedNumber({ repo, total: entities.length }));
   it(`Gets all ${entityName[1]} with pagination`, async () =>
     await shouldGetsAllWithPagination({ all: entities, repo }));
-  it(`Updates ${entityName[0]}`, async () =>
-    await shouldUpdates({ entity, repo, field: fieldForUpdate }));
+  if (fieldForUpdate) {
+    it(`Updates ${entityName[0]}`, async () =>
+      await shouldUpdates({
+        entity,
+        repo,
+        field: fieldForUpdate,
+        newValue: valueForUpdate,
+      }));
+  }
   it(`Deletes ${entityName[0]}`, async () =>
     await shouldDeletes({ entity, repo }));
 }
