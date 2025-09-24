@@ -19,6 +19,7 @@ describe("User Repository", async () => {
   for (let i = 0; i < TEST_USER_NUMBER; i++) {
     const user = await User.create({
       name: `Pavel${i}`,
+      email: `pashka${i}@mail.ru`,
       username: `pavel#${i}`,
       password: TEST_PASSWORD,
     });
@@ -28,6 +29,7 @@ describe("User Repository", async () => {
 
   const testUserToAdd = await User.create({
     name: "Pasha",
+    email: "pashka_12@mail.ru",
     username: "pavel",
     password: TEST_PASSWORD,
   });

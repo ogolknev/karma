@@ -10,6 +10,7 @@ export class User extends BaseEntity<UserUpdateDTO> {
   constructor(
     public id: string,
     public name: string,
+    public email: string,
     public username: string,
     private passwordHash: string
   ) {
@@ -20,11 +21,17 @@ export class User extends BaseEntity<UserUpdateDTO> {
     const id = generateId();
     const passwordHash = await hashPassword(data.password);
 
-    return new User(id, data.name, data.username, passwordHash);
+    return new User(id, data.name, data.email, data.username, passwordHash);
   }
 
   static fromDTO({ data }: { data: BaseUserDTO }) {
-    return new User(data.id, data.name, data.username, data.passwordHash);
+    return new User(
+      data.id,
+      data.name,
+      data.email,
+      data.username,
+      data.passwordHash
+    );
   }
 
   update(data: UserUpdateDTO) {
@@ -35,6 +42,7 @@ export class User extends BaseEntity<UserUpdateDTO> {
     return {
       id: this.id,
       name: this.name,
+      email: this.email,
       username: this.username,
       passwordHash: this.passwordHash,
     };

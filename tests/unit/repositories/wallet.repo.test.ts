@@ -21,6 +21,7 @@ describe("Wallet Repository", async () => {
   for (let i = 0; i < WALLETS_NUMBER; i++) {
     const user = await User.create({
       name: "Pavel",
+      email: `pavel${i}@mail.ru`,
       username: `pavel#${i}`,
       password: "1sfaksndnKJSDcas1242fdsFSJAGH",
     });
@@ -37,6 +38,7 @@ describe("Wallet Repository", async () => {
   owners.push(
     await User.create({
       name: "Pavel",
+      email: "pashka@mail.ru",
       username: `pavel#*`,
       password: "1sfaksndnKJSDcas1242fdsFSJAGH",
     })

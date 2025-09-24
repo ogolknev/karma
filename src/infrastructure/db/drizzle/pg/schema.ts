@@ -12,6 +12,7 @@ import {
 export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey(),
   name: varchar("name", { length: 40 }).notNull(),
+  email: varchar("email").notNull(),
   username: varchar("username", { length: 20 }).notNull().unique(),
   passwordHash: varchar("password_hash").notNull(),
 });

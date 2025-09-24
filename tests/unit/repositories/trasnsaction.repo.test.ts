@@ -25,6 +25,7 @@ describe("Transaction Repository", async () => {
   for (let i = 0; i < TRANSACTION_NUMBER + 1; i++) {
     const user = await User.create({
       name: "Pavel",
+      email: `pavel${i}@mail.ru`,
       username: `pavel#${i}`,
       password: "1sfaksndnKJSDcas1242fdsFSJAGH",
     });

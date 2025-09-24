@@ -17,6 +17,7 @@ describe("Task Repository", async () => {
   const TASK_NUMBER = 300;
   const author = await User.create({
     name: "Pavel",
+    email: `pavel@mail.ru`,
     username: "pasha",
     password: "0123456",
   });
