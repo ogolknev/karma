@@ -1,6 +1,6 @@
 import { Task } from "@/core/modules/task/task.entity";
 import { User } from "@/core/modules/user";
-import { afterAll, beforeAll, describe } from "bun:test";
+import { afterAll, beforeAll, describe, it } from "bun:test";
 import { execBeforeAll } from "./utils/exec-before-all";
 import { drizzle } from "drizzle-orm/node-postgres";
 import config from "@/shared/config";
@@ -54,13 +54,15 @@ describe("Task Repository", async () => {
     await execAfterAll(db);
   });
 
-  shouldCRUD({
-    entityName: ["task", "tasks"],
-    entities: tasks,
-    entityToAdd: taskToAdd,
-    repo: taskRepo,
-    fieldForUpdate: "description",
-    valueForUpdate: 'Yoooo',
-    db,
-  });
+  it(
+    "CRUD",
+    shouldCRUD({
+      entities: tasks,
+      entityToAdd: taskToAdd,
+      repo: taskRepo,
+      fieldForUpdate: "description",
+      valueForUpdate: "Yoooo",
+      db,
+    })
+  );
 });

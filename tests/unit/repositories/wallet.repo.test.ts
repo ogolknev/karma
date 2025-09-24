@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe } from "bun:test";
+import { afterAll, beforeAll, describe, it } from "bun:test";
 import { execBeforeAll } from "./utils/exec-before-all";
 import { execAfterAll } from "./utils/exec-after-all";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -61,13 +61,15 @@ describe("Wallet Repository", async () => {
     execAfterAll(db);
   });
 
-  shouldCRUD({
-    entityName: ["wallet", "wallets"],
-    entities: wallets,
-    entityToAdd: walletToAdd,
-    repo: walletRepo,
-    fieldForUpdate: "karma",
-    valueForUpdate: 1000,
-    db,
-  });
+  it(
+    "CRUD",
+    shouldCRUD({
+      entities: wallets,
+      entityToAdd: walletToAdd,
+      repo: walletRepo,
+      fieldForUpdate: "karma",
+      valueForUpdate: 1000,
+      db,
+    })
+  );
 });

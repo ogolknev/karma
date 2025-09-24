@@ -1,10 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  describe,
-  expect,
-  it,
-} from "bun:test";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { PgUserRepo } from "@/infrastructure/db/drizzle/pg/repositories/user.repo";
 import { User } from "@/core/modules/user";
@@ -51,20 +45,22 @@ describe("User Repository", async () => {
     await execAfterAll(db);
   });
 
-  shouldCRUD({
-    entityName: ["user", "users"],
-    entities: testUsers,
-    entityToAdd: testUserToAdd,
-    repo: userRepo,
-    db,
-    fieldForUpdate: "name",
-    valueForUpdate: 'Petr'
-  });
+  it(
+    "CRUD",
+    shouldCRUD({
+      entities: testUsers,
+      entityToAdd: testUserToAdd,
+      repo: userRepo,
+      db,
+      fieldForUpdate: "name",
+      valueForUpdate: "Petr",
+    })
+  );
 
   it("Gets user by username", async () => {
-    const { data: received } = await userRepo.getByUsername(
-      testUsers[0].username
-    );
+    const { data: received } = await userRepo.getByUsername({
+      username: testUsers[0].username,
+    });
 
     expect(received?.toDTO()).toEqual(testUsers[0].toDTO());
   });

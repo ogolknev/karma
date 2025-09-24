@@ -5,7 +5,7 @@ import { PgTransactionRepo } from "@/infrastructure/db/drizzle/pg/repositories/t
 import { PgUserRepo } from "@/infrastructure/db/drizzle/pg/repositories/user.repo";
 import { PgWalletRepo } from "@/infrastructure/db/drizzle/pg/repositories/wallet.repo";
 import config from "@/shared/config";
-import { afterAll, beforeAll, describe } from "bun:test";
+import { afterAll, beforeAll, describe, it } from "bun:test";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { execBeforeAll } from "./utils/exec-before-all";
 import { execAfterAll } from "./utils/exec-after-all";
@@ -64,11 +64,13 @@ describe("Transaction Repository", async () => {
     await execAfterAll(db);
   });
 
-  shouldCRUD({
-    entities: transactions.slice(0, TRANSACTION_NUMBER),
-    entityName: ["transaction", "transactions"],
-    entityToAdd: transactions[TRANSACTION_NUMBER],
-    repo: transactionRepo,
-    db,
-  });
+  it(
+    "CRUD",
+    shouldCRUD({
+      entities: transactions.slice(0, TRANSACTION_NUMBER),
+      entityToAdd: transactions[TRANSACTION_NUMBER],
+      repo: transactionRepo,
+      db,
+    })
+  );
 });
