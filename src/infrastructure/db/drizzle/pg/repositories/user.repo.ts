@@ -14,7 +14,11 @@ import { NodePgDatabase } from "drizzle-orm/node-postgres";
 export class PgUserRepo implements UserRepo {
   constructor(protected db: NodePgDatabase<any>) {}
 
-  async getByUsername(username: string): Promise<RepoResult<User | null>> {
+  async getByUsername({
+    username,
+  }: {
+    username: string;
+  }): Promise<RepoResult<User | null>> {
     const queryResult = await this.db
       .select()
       .from(usersTable)
