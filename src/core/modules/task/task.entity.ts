@@ -8,7 +8,7 @@ import { BaseEntity } from "../common";
 
 export class Task extends BaseEntity<TaskUpdateDTO> {
   constructor(
-    public id: string,
+    id: string,
     public title: string,
     public authorId: string,
     public cost: number,
@@ -20,7 +20,7 @@ export class Task extends BaseEntity<TaskUpdateDTO> {
     public projectId: string | null = null,
     public description: string | null = null
   ) {
-    super();
+    super(id);
   }
 
   static async create(data: TaskCreateDTO) {

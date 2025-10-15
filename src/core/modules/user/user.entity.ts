@@ -8,13 +8,13 @@ import { BaseEntity } from "../common";
 
 export class User extends BaseEntity<UserUpdateDTO> {
   constructor(
-    public id: string,
+    id: string,
     public name: string,
     public email: string,
     public username: string,
     private passwordHash: string
   ) {
-    super();
+    super(id);
   }
 
   static async create(data: UserCreateDTO) {
@@ -50,5 +50,9 @@ export class User extends BaseEntity<UserUpdateDTO> {
 
   async verify(password: string) {
     return verifyPassword(this.passwordHash, password);
+  }
+
+  async sendEmailVerificationCode() {
+    
   }
 }

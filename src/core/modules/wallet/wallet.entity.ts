@@ -5,12 +5,12 @@ import { BaseWalletDTO } from "./dto/BaseWalletDTO";
 
 export class Wallet extends BaseEntity<WalletUpdateDTO> {
   constructor(
-    public id: string,
+    id: string,
     public userId: string,
     public karma: number,
     public respect: number
   ) {
-    super();
+    super(id);
   }
 
   static async create(data: WalletCreateDTO) {

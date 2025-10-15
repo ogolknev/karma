@@ -7,7 +7,7 @@ import { BaseTransactionDTO } from "./dto/BaseTransactionDTO";
 
 export class Transaction extends BaseEntity<{}> {
   constructor(
-    public id: string,
+    id: string,
     public fromId: string,
     public toId: string,
     public type: TransactionType,
@@ -15,7 +15,7 @@ export class Transaction extends BaseEntity<{}> {
     public createdAt: Date,
     public taskId: string | null = null
   ) {
-    super();
+    super(id);
   }
 
   static async create(data: TransactionCreateDTO) {
