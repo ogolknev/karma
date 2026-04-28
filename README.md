@@ -1,11 +1,5 @@
-To install dependencies:
-```sh
-bun install
-```
+# Karma
 
-To run:
-```sh
-bun run dev
-```
+An application that helps you make your karma work for you. You can earn karma points by completing tasks that benefit yourself, as well as by helping others and earning their respect (and shared karma points).
 
-open http://localhost:3000
+🚧 Early stage of development 🚧
