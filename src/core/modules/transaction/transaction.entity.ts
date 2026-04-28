@@ -45,12 +45,7 @@ export class Transaction extends BaseEntity<{}> {
     );
   }
 
-  /**
-   * Method not allowed!
-   */
-  update(_data: {}): void {
-    throw new Error("Method not allowed.");
-  }
+  update!: never;
 
   toDTO(): BaseTransactionDTO {
     return {
