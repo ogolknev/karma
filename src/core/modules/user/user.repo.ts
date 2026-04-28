@@ -9,4 +9,9 @@ export interface UserRepo extends BaseRepo<User, BaseUserDTO, UserUpdateDTO> {
   }: {
     username: string;
   }): Promise<RepoResult<User | null>>;
+  getByEmail({
+    email,
+  }: {
+    email: string;
+  }): Promise<RepoResult<User | null>>;
 }

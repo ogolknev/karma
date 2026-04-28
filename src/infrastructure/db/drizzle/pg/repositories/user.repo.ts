@@ -30,6 +30,22 @@ export class PgUserRepo implements UserRepo {
     };
   }
 
+  async getByEmail({
+    email,
+  }: {
+    email: string;
+  }): Promise<RepoResult<User | null>> {
+    const queryResult = await this.db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.email, email));
+
+    return {
+      data:
+        queryResult.length > 0 ? User.fromDTO({ data: queryResult[0] }) : null,
+    };
+  }
+
   async add({ data }: { data: User }): Promise<RepoResult<User>> {
     const queryResult = await this.db
       .insert(usersTable)
